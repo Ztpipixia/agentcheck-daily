@@ -296,7 +296,11 @@
   .rule-card p b{color:#fff3d0}
   .refgen{background:rgba(0,0,0,.30);border:1px solid rgba(242,193,78,.28);border-radius:var(--radius-lg);padding:25px;margin-top:24px}
   .refgen h3{margin:0 0 5px;font-family:var(--serif);font-size:19px;font-weight:900;color:#fff8e6}
-  .refgen .rg-sub{margin:0 0 17px;font-size:14px;line-height:1.7;color:#c9ba8d}
+  .refgen .rg-sub{margin:0 0 14px;font-size:14px;line-height:1.7;color:#c9ba8d}
+  .my-ref-badge{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(242,193,78,.12);border:1px solid rgba(242,193,78,.38);color:#ffe1a1;border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:700;margin:0 0 16px;line-height:1.5}
+  .my-ref-badge b{color:#fff8e6}
+  .my-ref-badge .hint{font-weight:500;color:#c9ba8d;font-size:12.5px}
+  .ref-id-chip{display:inline-flex;align-items:center;background:rgba(242,193,78,.16);border:1px solid rgba(242,193,78,.45);color:#ffe1a1;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;white-space:nowrap}
   .refgen-row{display:flex;gap:10px;flex-wrap:wrap}
   .refgen-row input[type="text"]{flex:1;min-width:220px;border:1px solid rgba(255,248,230,.25);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:15px;background:rgba(255,248,230,.06);color:#fff8e6}
   .refgen-row input[type="text"]::placeholder{color:#97865c}
@@ -656,11 +660,11 @@
       <div class="invite-rules">
         <div class="rule-card">
           <h3>每个被邀请人只算一次</h3>
-          <p>邀请奖励只在被邀请人<b>第一次</b>签到时产生，同一个被邀请人之后每天再签到，都不会再给邀请人加分。换个链接、换个入口重复算也不行，以链上首次签到记录为准。</p>
+          <p>邀请奖励只在被邀请人<b>第一次</b>签到时产生，同一个被邀请人之后每天再签到，都不会再给邀请人加分。换个编号、换个入口重复算也不行，以链上首次签到记录为准。</p>
         </div>
         <div class="rule-card">
           <h3>邀请人资格</h3>
-          <p>邀请人必须是<b>持有 Agent ID</b>、且<b>自己已经签到过</b>的人。还没签过到就发邀请链接，邀请奖励不计；先完成自己的第一次签到，再去邀请别人。</p>
+          <p>邀请人必须是<b>持有 Agent ID</b>、且<b>自己已经签到过</b>的人。还没签过到就发邀请编号链接，邀请奖励不计；先完成自己的第一次签到，再去邀请别人。</p>
         </div>
         <div class="rule-card">
           <h3>不能自邀</h3>
@@ -674,13 +678,15 @@
 
       <div class="refgen">
         <h3>生成我的邀请链接</h3>
-        <p class="rg-sub">填入你的 Agent 钱包地址或 Agent ID（比如 <span class="mono">trump.ai</span>），生成带 <span class="mono">?ref=</span> 的专属链接。对方通过这个链接进来并完成首次签到，邀请奖励记在你名下。</p>
+        <p class="rg-sub">邀请改用 6 位编号短链接，不再用一长串钱包地址。填入你的 Agent 钱包地址，页面会按内置编号对照表生成短链接（如 <span class="mono">?ref=859872</span>）。对方通过短链接进来并完成首次签到，邀请奖励记在你名下。</p>
+        <div class="my-ref-badge" id="my-ref-badge">我的邀请编号：<b id="my-ref-num">—</b><span class="hint" id="my-ref-hint">连接钱包后自动识别 · 部署者编号 859872</span></div>
         <div class="refgen-row">
-          <input type="text" id="ref-input" placeholder="输入 Agent 钱包地址（0x…）或 Agent ID（如 trump.ai）" autocomplete="off" spellcheck="false" />
-          <button class="btn btn-gold" id="btn-refgen" type="button">生成邀请链接</button>
+          <input type="text" id="ref-input" placeholder="输入 Agent 钱包地址（0x…）或 6 位邀请编号（如 859872）" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-gold" id="btn-refgen" type="button">生成短编号链接</button>
         </div>
         <div class="ref-out" id="ref-out">
           <div class="link" id="ref-link"></div>
+          <span class="ref-id-chip" id="ref-id-label" style="display:none"></span>
           <button class="copy-btn" type="button" id="btn-refcopy">复制链接</button>
         </div>
         <div class="msg" id="ref-msg" role="status"></div>
@@ -688,7 +694,7 @@
           <div class="stat"><div class="k">我的邀请人数（预览）</div><div class="v" id="stat-invites">0</div></div>
           <div class="stat"><div class="k">我的邀请积分（预览）</div><div class="v" id="stat-invite-points">0 分</div></div>
         </div>
-        <p class="ref-note">签到合约已部署上链，上面的邀请人数与邀请积分是本页的<b>预览计数</b>，不代表真实邀请记录；<b>一切以链上数据为准</b>，可在 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对签到合约记录。</p>
+        <p class="ref-note">邀请链接已改用 6 位编号：<span class="mono">?ref=</span> 后面是编号，页面打开时按内置对照表解析成钱包地址再传给签到合约；旧的 <span class="mono">?ref=0x…</span> 地址链接仍兼容。签到合约已部署上链，上面的邀请人数与邀请积分是本页的<b>预览计数</b>，不代表真实邀请记录；<b>一切以链上数据为准</b>，可在 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对签到合约记录。</p>
       </div>
     </div>
   </section>
@@ -925,6 +931,48 @@
   };
   var ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
+  /* ============ 邀请编号对照表（6 位编号 ↔ 钱包地址） ============ */
+  var SITE_BASE = "https://ztpipixia.github.io/agentcheck-daily/";
+  var REF_CODE_MAP = {
+    "859872": "0xf3cC5442d3CC30AC4F7aCE55E81431E3F9396634"
+  };
+  function codeForAddress(addr){
+    if (!addr) return null;
+    var low = String(addr).toLowerCase();
+    for (var code in REF_CODE_MAP){
+      if (REF_CODE_MAP[code].toLowerCase() === low) return code;
+    }
+    return null;
+  }
+  function addressForCode(code){
+    if (!code) return null;
+    return REF_CODE_MAP[String(code).trim()] || null;
+  }
+  /* 解析 ?ref= 参数：6 位数字按对照表解析，0x 地址直接兼容，其余返回 null */
+  function resolveRefParam(raw){
+    if (!raw) return null;
+    var v = String(raw).trim();
+    if (/^\d{6}$/.test(v)) return addressForCode(v);
+    if (/^0x[0-9a-fA-F]{40}$/.test(v)) return v;
+    return null;
+  }
+  function updateMyRefBadge(){
+    var numEl = document.getElementById("my-ref-num");
+    var hintEl = document.getElementById("my-ref-hint");
+    if (!numEl) return;
+    var code = state.account ? codeForAddress(state.account) : null;
+    if (code){
+      numEl.textContent = code;
+      if (hintEl) hintEl.textContent = "已连接 " + shortAddr(state.account);
+    } else if (state.account){
+      numEl.textContent = "暂未分配";
+      if (hintEl) hintEl.textContent = "当前地址不在编号对照表内";
+    } else {
+      numEl.textContent = "—";
+      if (hintEl) hintEl.textContent = "连接钱包后自动识别 · 部署者编号 859872";
+    }
+  }
+
   function $(id){ return document.getElementById(id); }
   function utcDateStr(ts){
     var d = new Date(ts);
@@ -1035,6 +1083,7 @@
     else if (state.hasAgentId === false){ btn.disabled = true; btn.textContent = "该地址没有 Agent ID，无法签到"; }
     else if (state.hasAgentId === true){ btn.disabled = false; btn.textContent = "今日签到 +10 分"; }
     else { btn.disabled = true; btn.textContent = "正在读取链上状态…"; }
+    updateMyRefBadge();
   }
 
   /* ============ 钱包连接（仅浏览器注入式 window.ethereum） ============ */
@@ -1165,11 +1214,12 @@
       return;
     }
     if (state.onchain && state.onchain.today){ showMsg("今天已经签到过了，明天再来。", "warn"); return; }
-    // 邀请人：仅当页面带 ?ref=0x… 且不是自己时传给合约，否则传零地址（合约只在首次签到时认邀请）
+    // 邀请人：?ref= 为 6 位编号时按对照表解析成地址，?ref= 为 0x 地址时直接兼容；不是自己时才传给合约，否则传零地址（合约只在首次签到时认邀请）
     var referrer = ZERO_ADDR;
     try {
       var ref = new URLSearchParams(location.search).get("ref");
-      if (ref && /^0x[0-9a-fA-F]{40}$/.test(ref) && ref.toLowerCase() !== state.account.toLowerCase()) referrer = ref;
+      var resolved = resolveRefParam(ref);
+      if (resolved && resolved.toLowerCase() !== state.account.toLowerCase()) referrer = resolved;
     } catch (e) {}
     state.txPending = true; render();
     window.ethereum.request({
@@ -1286,27 +1336,69 @@
   });
   calc();
 
-  /* ============ 邀请链接生成器 ============ */
+  /* ============ 邀请链接生成器（6 位编号短链接） ============ */
   var refLink = "";
   function showRefMsg(text, kind){
     var m = $("ref-msg");
     m.textContent = text;
     m.className = "msg show " + (kind || "info");
   }
+  function hideRefOut(){
+    refLink = "";
+    $("ref-out").classList.remove("show");
+    var lbl = $("ref-id-label");
+    if (lbl){ lbl.style.display = "none"; lbl.textContent = ""; }
+  }
   $("btn-refgen").addEventListener("click", function(){
     var v = $("ref-input").value.trim();
+    // 输入为空时，若已连接钱包且该地址有编号，直接用已连接地址的编号生成
+    if (!v && state.account){
+      var myCode0 = codeForAddress(state.account);
+      if (myCode0) v = myCode0;
+    }
     if (!v){
-      refLink = "";
-      $("ref-out").classList.remove("show");
-      showRefMsg("请先填入你的 Agent 钱包地址或 Agent ID（比如 trump.ai）。", "warn");
+      hideRefOut();
+      showRefMsg("请先填入你的 Agent 钱包地址或 6 位邀请编号（如 859872），或先连接钱包。", "warn");
       return;
     }
-    var a = document.createElement("a");
-    a.href = "?ref=" + encodeURIComponent(v);
-    refLink = a.href;
+    var code = null;
+    var addr = null;
+    if (/^\d{6}$/.test(v)){
+      code = v;
+      addr = addressForCode(v);
+      if (!addr){
+        hideRefOut();
+        showRefMsg("编号 " + v + " 还不在编号对照表里，暂时生成不了短链接。请核对编号，或改填钱包地址。", "warn");
+        return;
+      }
+    } else if (/^0x[0-9a-fA-F]{40}$/.test(v)){
+      addr = v;
+      code = codeForAddress(v);
+      if (!code){
+        // 地址有效但尚未分配编号：仍生成兼容的地址版链接，并明确说明，避免误以为已是短编号
+        refLink = SITE_BASE + "?ref=" + v;
+        $("ref-link").textContent = refLink;
+        var lbl0 = $("ref-id-label");
+        if (lbl0){ lbl0.style.display = "none"; lbl0.textContent = ""; }
+        $("ref-out").classList.add("show");
+        showRefMsg("这个地址还没有分配 6 位邀请编号，已先生成地址版链接（仍可正常邀请）。有编号后请改用短编号链接。", "warn");
+        return;
+      }
+    } else {
+      hideRefOut();
+      showRefMsg("格式不对：请填 0x 开头的 Agent 钱包地址，或 6 位邀请编号（如 859872）。", "warn");
+      return;
+    }
+    refLink = SITE_BASE + "?ref=" + code;
     $("ref-link").textContent = refLink;
+    var lbl = $("ref-id-label");
+    if (lbl){ lbl.textContent = "我的邀请编号：" + code; lbl.style.display = "inline-flex"; }
+    var numEl = $("my-ref-num");
+    var hintEl = $("my-ref-hint");
+    if (numEl) numEl.textContent = code;
+    if (hintEl && addr) hintEl.textContent = "对应地址 " + shortAddr(addr);
     $("ref-out").classList.add("show");
-    showRefMsg("邀请链接已生成，发给持有 Agent ID 的朋友；对方完成首次签到后，邀请奖励记在你名下。", "info");
+    showRefMsg("短编号邀请链接已生成（编号 " + code + "），发给持有 Agent ID 的朋友；对方完成首次签到后，邀请奖励记在你名下。", "info");
   });
   $("ref-input").addEventListener("keydown", function(e){
     if (e.key === "Enter"){ e.preventDefault(); $("btn-refgen").click(); }
