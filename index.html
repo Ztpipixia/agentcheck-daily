@@ -599,10 +599,10 @@
 
           <div class="snapshot" aria-label="链上数据快照">
             <span class="snap-nums">
-              <span>全网签到人数 <b>1</b> 人</span>
-              <span>全网总积分 <b>10</b> 分</span>
+              <span>全网签到人数 <b>2</b> 人</span>
+              <span>全网总积分 <b>20</b> 分</span>
             </span>
-            <span class="snap-note">链上快照（2026-11-23 部署后读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：部署者已完成首次签到，计 10 分。实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+            <span class="snap-note">链上快照（2026-11-23 18:10 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 2 个地址签到，共计 20 分。实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
           </div>
 
         </div>
@@ -627,12 +627,12 @@
   <div class="stats-row" data-view="checkin" aria-label="关键数据">
     <div class="stat-card">
       <div class="k">全网签到人数</div>
-      <div class="v">1<span class="unit">人</span></div>
+      <div class="v">2<span class="unit">人</span></div>
       <div class="note">链上快照 · totalCheckers</div>
     </div>
     <div class="stat-card">
       <div class="k">全网总积分</div>
-      <div class="v">10<span class="unit">分</span></div>
+      <div class="v">20<span class="unit">分</span></div>
       <div class="note">链上快照 · totalPoints</div>
     </div>
     <div class="stat-card">
@@ -852,21 +852,22 @@
       <span class="sec-num">05</span>
       <div>
         <h2>积分榜</h2>
-        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 部署后读取的链上快照；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 18:10 读取的链上快照；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
       </div>
     </div>
     <div class="lb-stats">
-      <div class="stat"><div class="k">全网签到人数（totalCheckers）</div><div class="v">1</div></div>
-      <div class="stat"><div class="k">全网总积分（totalPoints）</div><div class="v">10 分</div></div>
-      <div class="stat"><div class="k">创新奖门槛进度</div><div class="v">1 / 30 个地址</div></div>
+      <div class="stat"><div class="k">全网签到人数（totalCheckers）</div><div class="v">2</div></div>
+      <div class="stat"><div class="k">全网总积分（totalPoints）</div><div class="v">20 分</div></div>
+      <div class="stat"><div class="k">创新奖门槛进度</div><div class="v">2 / 30 个地址</div></div>
     </div>
     <table id="lb-table">
       <thead><tr><th>排名</th><th>签到者</th><th class="num">签到天数</th><th class="num">积分</th></tr></thead>
       <tbody id="lb-body">
         <tr><td>1</td><td>首位签到者（项目部署者）</td><td class="num">1</td><td class="num">10</td></tr>
+        <tr><td>2</td><td>第 2 位签到者</td><td class="num">1</td><td class="num">10</td></tr>
       </tbody>
     </table>
-    <p class="tbl-note">快照说明：合约部署后，部署者已完成首次签到（1 天、10 分），故 totalCheckers = 1、totalPoints = 10。新签到会持续累积，本页快照不自动刷新，实时排名以链上记录为准。</p>
+    <p class="tbl-note">快照说明：2026-11-23 18:10 读取链上数据，已有 2 个地址签到（各 1 天、10 分），故 totalCheckers = 2、totalPoints = 20。新签到会持续累积，本页快照不自动刷新，实时排名以链上记录为准。</p>
   </section>
 
   <section id="contracts" data-view="more">
@@ -972,7 +973,7 @@
     agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
     checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
     distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
-    chainSnapshot: { totalCheckers: 1, totalPoints: 10 }, // 2026-11-23 部署后链上快照
+    chainSnapshot: { totalCheckers: 2, totalPoints: 20 }, // 2026-11-23 18:10 链上快照
     pointsPerDay: 10,
     periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
