@@ -125,6 +125,9 @@
   .btn-big{width:100%;font-size:17px;padding:15px 18px;border-radius:14px;margin-top:16px}
   .btn[disabled]{opacity:.48;cursor:not-allowed;transform:none;box-shadow:none}
   .btn-connect{width:100%;font-size:16px;padding:13px 18px;border-radius:14px}
+  .wallet-actions{display:flex;gap:10px}
+  .wallet-actions .btn-connect{flex:1;width:auto;min-width:0}
+  .btn-disconnect{flex:none;font-size:15px;padding:13px 18px;border-radius:14px}
   .wallet-note{font-size:12.5px;line-height:1.7;color:var(--muted);margin:10px 0 18px}
   .theme-toggle{appearance:none;width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);background:var(--surface2);color:var(--gold);cursor:pointer;transition:border-color .15s ease, transform .12s ease}
   .theme-toggle:hover{border-color:var(--gold)}
@@ -561,7 +564,10 @@
           </ul>
         </div>
         <div class="console-col">
-          <button class="btn btn-gold btn-connect" id="btn-connect" type="button">连接钱包</button>
+          <div class="wallet-actions">
+            <button class="btn btn-gold btn-connect" id="btn-connect" type="button">连接钱包</button>
+            <button class="btn btn-ghost btn-disconnect" id="btn-disconnect" type="button" style="display:none">断开连接</button>
+          </div>
           <p class="wallet-note">只通过浏览器注入式钱包连接（window.ethereum）：点按钮后由钱包自带弹窗请你确认。本站不扫码、不用配对码、不用 WalletConnect、不代签，也不保存你的登录状态。</p>
           <div class="statgrid">
             <div class="stat"><div class="k">我的积分</div><div class="v" id="stat-points">—</div></div>
@@ -1108,7 +1114,27 @@
       btn.disabled = false;
       btn.textContent = "连接钱包";
     }
+    var disc = $("btn-disconnect");
+    if (disc) disc.style.display = state.account ? "" : "none";
   }
+  /* 断开连接：先清页面状态；钱包支持 wallet_revokePermissions 时顺带撤销本站授权，不支持或失败都静默忽略 */
+  function disconnectWallet(){
+    var eth = window.ethereum;
+    state.account = null;
+    state.chainOk = false;
+    state.hasAgentId = null;
+    state.onchain = null;
+    state.txPending = false;
+    renderConnectBtn(); render();
+    showMsg("已断开钱包连接，页面上的地址、积分与签到状态已恢复到未连接显示。需要时点「连接钱包」重新连接，钱包会重新弹出确认。", "info");
+    if (eth && eth.request){
+      try {
+        var p = eth.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] });
+        if (p && p.catch) p.catch(function(){});
+      } catch (e) {}
+    }
+  }
+  $("btn-disconnect").addEventListener("click", disconnectWallet);
   /* 连接后（或账户/网络变化后）从链上读：Agent ID balanceOf、积分、签到天数、今日是否已签 */
   function refreshChainState(){
     if (!state.account || !state.chainOk || !window.ethereum) return Promise.resolve();
@@ -1175,9 +1201,11 @@
   if (window.ethereum && window.ethereum.on){
     window.ethereum.on("accountsChanged", function(accounts){
       if (!accounts || !accounts.length){
-        state.account = null; state.chainOk = false; state.hasAgentId = null; state.onchain = null;
+        var wasConnected = !!state.account;
+        state.account = null; state.chainOk = false; state.hasAgentId = null; state.onchain = null; state.txPending = false;
         renderConnectBtn(); render();
-        showMsg("钱包已断开或切换到未连接状态，点「连接钱包」可重新连接。", "warn");
+        // 页面内点「断开连接」时状态已先清空，这里不再重复提示
+        if (wasConnected) showMsg("钱包已断开或切换到未连接状态，点「连接钱包」可重新连接。", "warn");
         return;
       }
       state.account = accounts[0];
