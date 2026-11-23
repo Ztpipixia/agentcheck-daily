@@ -7,6 +7,18 @@
 <script>
   /* 全站固定黑夜模式，无主题切换。 */
   document.documentElement.classList.add("js-anim");
+  /* 打开页面必须停在首页顶部，不能自动跳到中间的区块：
+     视图切换曾把网址写成 #checkin / #invite 等，正好和页面里同名区块的 id 撞上，
+     浏览器打开带这种网址的页面时会按锚点自动滚到那个区块。
+     这里在正文解析前就把旧写法改成 #/checkin 这种不对应任何区块 id 的写法，
+     并关掉浏览器的滚动位置恢复，保证从顶部开始。 */
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    var _h = (location.hash || "").replace(/^#\/?/, "");
+    var _legacy = { checkin: "checkin", invite: "invite", leaderboard: "board", board: "board", rules: "rules", calculator: "rules", contracts: "more", faq: "more", more: "more", top: "checkin" };
+    if (_legacy[_h]) history.replaceState(null, "", "#/" + _legacy[_h]);
+    window.scrollTo(0, 0);
+  } catch (e) {}
 </script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='14.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='28.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='%23171106'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='none' stroke='%23c9901d' stroke-width='2.3'/%3E%3Cpath d='M7 20.5v-1.7c0-4.6 3.7-8.3 8.3-8.3h17.4c4.6 0 8.3 3.7 8.3 8.3v1.7z' fill='%23c9901d'/%3E%3Cpath d='M16.6 31.4l5.4 5.4 9.6-10.6' fill='none' stroke='%23c9901d' stroke-width='4.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <title>AgentCheck Daily — Agent ID 每日签到</title>
@@ -455,7 +467,7 @@
 
 <header class="topnav">
   <div class="wrap nav-in">
-    <a class="brand" href="#checkin" data-goto="checkin" aria-label="AgentCheck Daily 首页">
+    <a class="brand" href="#/checkin" data-goto="checkin" aria-label="AgentCheck Daily 首页">
       <svg class="brand-mark" aria-hidden="true"><use href="#ac-logo"></use></svg>
       <span><span class="brand-name">AgentCheck <em>Daily</em></span><span class="brand-sub">AGENT ID 每日签到</span></span>
     </a>
@@ -541,7 +553,7 @@
             <span>全网签到人数 <b>3</b> 人</span>
             <span>全网总积分 <b>30</b> 分</span>
           </span>
-          <span class="snap-note">链上快照（2026-11-23 19:46 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+          <span class="snap-note">链上快照（2026-11-23 19:53 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
         </div>
       </div>
     </div>
@@ -748,7 +760,7 @@
       <span class="sec-num">05</span>
       <div>
         <h2>积分榜</h2>
-        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 19:46 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 19:53 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
       </div>
     </div>
     <div class="stats-row" data-view="board" aria-label="关键数据">
@@ -785,7 +797,7 @@
       </tbody>
     </table>
     <p class="tbl-note">排行榜按钱包地址标识签到者，地址前后各显示几位。</p>
-    <p class="tbl-note">快照说明：截至 2026-11-23 19:46，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
+    <p class="tbl-note">快照说明：截至 2026-11-23 19:53，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
   </section>
 
   <section id="contracts" data-view="more">
@@ -891,7 +903,7 @@
     agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
     checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
     distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
-    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 19:46 链上快照
+    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 19:53 链上快照
     pointsPerDay: 10,
     periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
@@ -1301,8 +1313,10 @@
   })();
 
   /* ============ 视图切换（桌面应用式：一次只显示一个视图） ============ */
-  var VIEW_HASH = { checkin: "checkin", invite: "invite", board: "leaderboard", rules: "rules", more: "contracts" };
-  var HASH_VIEW = { checkin: "checkin", invite: "invite", leaderboard: "board", rules: "rules", calculator: "rules", contracts: "more", faq: "more", top: "checkin" };
+  /* 网址用 #/视图名 写法：不能用 #checkin 这类和区块 id 同名的锚点，
+     否则浏览器打开页面时会自动滚到同名区块，而不是停在首页顶部。 */
+  var VIEW_HASH = { checkin: "/checkin", invite: "/invite", board: "/board", rules: "/rules", more: "/more" };
+  var HASH_VIEW = { checkin: "checkin", invite: "invite", leaderboard: "board", board: "board", rules: "rules", calculator: "rules", contracts: "more", faq: "more", more: "more", top: "checkin" };
   function switchView(name){
     if (!VIEW_HASH[name]) name = "checkin";
     document.querySelectorAll("[data-view]").forEach(function(el){
@@ -1335,10 +1349,13 @@
   }
   var initialView = "checkin";
   try {
-    var h = (location.hash || "").replace("#", "");
+    var h = (location.hash || "").replace(/^#\/?/, "");
     if (HASH_VIEW[h]) initialView = HASH_VIEW[h];
   } catch (e) {}
   switchView(initialView);
+  /* 双保险：页面完全加载后再回顶部一次，抵消浏览器对旧锚点/滚动恢复的迟到跳转；
+     只在刚打开时执行，之后用户点「去签到」等站内跳转不受影响。 */
+  window.addEventListener("load", function(){ window.scrollTo(0, 0); });
 })();
 </script>
 </body>
