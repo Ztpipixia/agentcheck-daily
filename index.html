@@ -124,11 +124,10 @@
   .btn-ghost:hover{border-color:var(--gold)}
   .btn-big{width:100%;font-size:17px;padding:15px 18px;border-radius:14px;margin-top:16px}
   .btn[disabled]{opacity:.48;cursor:not-allowed;transform:none;box-shadow:none}
-  .btn-connect{width:100%;font-size:16px;padding:13px 18px;border-radius:14px}
-  .wallet-actions{display:flex;gap:10px}
-  .wallet-actions .btn-connect{flex:1;width:auto;min-width:0}
-  .btn-disconnect{flex:none;font-size:15px;padding:13px 18px;border-radius:14px}
-  .wallet-note{font-size:12.5px;line-height:1.7;color:var(--muted);margin:10px 0 18px}
+  .agent-cmd{border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:var(--radius);padding:18px 20px}
+  .agent-cmd-text{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink)}
+  .agent-cmd .btn{margin-top:14px}
+  .agent-why{font-size:13.5px;line-height:1.75;color:var(--muted);margin:14px 0 0}
   .theme-toggle{appearance:none;width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);background:var(--surface2);color:var(--gold);cursor:pointer;transition:border-color .15s ease, transform .12s ease}
   .theme-toggle:hover{border-color:var(--gold)}
   .theme-toggle:active{transform:translateY(1px)}
@@ -585,23 +584,18 @@
       
       <div class="console">
       <div class="console-top">
-        <h3>今日签到</h3>
+        <h3>Agent 签到</h3>
         <span class="console-chip">BSC · Chain ID 56</span>
       </div>
       <div class="console-grid">
         
         <div class="console-col">
-          <div class="wallet-actions">
-            <button class="btn btn-gold btn-connect" id="btn-connect" type="button">连接钱包</button>
-            <button class="btn btn-ghost btn-disconnect" id="btn-disconnect" type="button" style="display:none">断开连接</button>
+          <p class="sub">签到由你自己的 AI 代理完成：复制下面这段指令发给你的 Agent，它会调用签到合约，最后由你在币安 App 里自己确认交易。</p>
+          <div class="agent-cmd">
+            <p class="agent-cmd-text" id="agent-cmd-text">用我的 Agent 钱包地址，在 AgentCheckIn 合约 0x423D4cce9A6B428f92dD974cC0bF490F24ceD824 上签到一次，邀请编号 859872（先到 https://ztpipixia.github.io/agentcheck-daily/ref-codes.json 查这个编号对应的邀请人地址，作为 checkIn 的 referrer 参数；查不到就用零地址）。签到前确认我的地址持有 Agent ID，当天还没签过，交易由我在钱包里自己确认。</p>
+            <button class="btn btn-gold btn-big" id="btn-copy-cmd" type="button">复制签到指令</button>
           </div>
-          <p class="wallet-note">只通过浏览器注入式钱包连接（window.ethereum）：点按钮后由钱包自带弹窗请你确认。本站不扫码、不用配对码、不用 WalletConnect、不代签，也不保存你的登录状态。</p>
-          <div class="statgrid">
-            <div class="stat"><div class="k">我的积分</div><div class="v" id="stat-points">—</div></div>
-            <div class="stat"><div class="k">累计签到</div><div class="v" id="stat-days">—</div></div>
-            <div class="stat"><div class="k">今日是否已签到</div><div class="v small" id="stat-today"><span class="badge badge-wait">待签到</span></div></div>
-            <div class="stat"><div class="k">Agent ID 持有状态</div><div class="v small" id="stat-agent"><span class="badge badge-wait">未检查</span></div></div>
-          </div>
+          <p class="agent-why">为什么走 Agent：Agent 钱包不支持网页直连，签到只能由自己的 AI 代理调用合约完成，交易仍由你自己在钱包里确认，本站不代签。完整说明见 <a href="https://ztpipixia.github.io/agentcheck-daily/agent.md" target="_blank" rel="noopener">Agent 签到指南（agent.md）</a>，下方「签到台」也有分步指南。</p>
 
           <div class="snapshot" aria-label="链上数据快照">
             <span class="snap-nums">
@@ -611,19 +605,6 @@
             <span class="snap-note">链上快照（2026-11-23 部署后读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：部署者已完成首次签到，计 10 分。实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
           </div>
 
-          <button class="btn btn-gold btn-big" id="btn-checkin" type="button" disabled>今日签到 +10 分</button>
-          <div class="msg" id="console-msg" role="status"></div>
-
-          <ul class="checklist">
-            <li id="ck-wallet"><span class="ck">✓</span><span>签到地址位于 BSC 网络（Chain ID 56）</span></li>
-            <li id="ck-agent"><span class="ck">✓</span><span>该地址持有 Agent ID（balanceOf &gt; 0）</span></li>
-            <li id="ck-period"><span class="ck">✓</span><span>当前在投稿期内（截至 2026-12-09 08:00 UTC）</span></li>
-            <li id="ck-today"><span class="ck">✓</span><span>今天（UTC）尚未签到</span></li>
-          </ul>
-          <label class="preview-toggle">
-            <input type="checkbox" id="preview-mode" />
-            <span><b>界面预览模式</b>：签到合约已部署上链。打开后可在本页本地模拟一次签到流程，<b>不上链、不产生有效积分</b>，刷新页面即清空。正式签到请按上方钱包连接说明操作，以链上记录为准。</span>
-          </label>
         </div>
       </div>
     </div>
@@ -636,7 +617,7 @@
       </div>
       <div class="cal-wd" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
       <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
-      <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡；在下方签到台开启预览模式签到后，今天的格子会点亮为金色。</p>
+      <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡。每天通过自己的 Agent 签到一次，当天 +10 分。</p>
     </div>
   </div>
 </div>
@@ -671,22 +652,23 @@
       <span class="sec-num">01</span>
       <div>
         <h2>签到台</h2>
-        <p>签到资格只看签到地址是否持有 Agent ID：在下方点「连接钱包」、用浏览器钱包插件连接后，页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断，并读出你链上的积分与签到记录。</p>
+        <p>签到资格只看签到地址是否持有 Agent ID：签到合约会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断。签到由你自己的 AI 代理调用合约完成，本页只提供指令、指南与公开数据，不直接发起任何交易。</p>
       </div>
     </div>
 
     
 
     <div class="guide-card">
-      <div class="wallet-guide" aria-label="钱包连接说明">
-            <h4>钱包连接说明</h4>
+      <div class="wallet-guide" aria-label="怎么用 Agent 完成签到">
+            <h4>怎么用 Agent 完成签到</h4>
             <ol>
-              <li>签到必须用<b>持有 Agent ID 的币安 Agent 钱包地址</b>，普通钱包没 ID 签不了。</li>
-              <li><span class="wg-no">不要</span>在网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</li>
-              <li><strong>在本页连接钱包：</strong>点右侧「连接钱包」，用浏览器已安装的钱包插件（MetaMask、币安钱包插件、Trust Wallet 等）连接；连接与签到都由你在钱包自带弹窗里确认，本站不代签、不保存登录状态。</li>
-              <li><strong>正确签法一：</strong>在币安 App 内置浏览器打开本站签到。</li>
-              <li><strong>正确签法二：</strong>通过自己的 AI 代理从 Agent 钱包地址调签到合约，在 App 里确认。</li>
+              <li><strong>前提：</strong>先在币安 App 里领好 Agent ID，Agent 钱包里留一点 BNB 付 gas。</li>
+              <li><strong>复制指令：</strong>复制本页上方的签到指令（已带邀请编号 859872）。</li>
+              <li><strong>发给 Agent：</strong>把指令发给自己的 Agent（比如币安 App 里支持 Agentic Wallet 的 Agent）。</li>
+              <li><strong>Agent 先核对：</strong>Agent 会先确认你的地址持有 Agent ID、今天还没签过，然后准备好签到交易。</li>
+              <li><strong>你来确认：</strong>你在币安 App 里自己确认这笔交易，签到完成，当天拿 10 分。</li>
             </ol>
+            <p style="margin:12px 0 0;font-size:14px;line-height:1.7;color:var(--ink2)">签到成功后，可以在本页看链上快照，或到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 查 AgentCheckIn 合约的交易记录确认。另外提醒：<span class="wg-no">不要</span>在任何网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</p>
           </div>
     </div>
 
@@ -767,7 +749,7 @@
       <div class="refgen">
         <h3>生成我的邀请链接</h3>
         <p class="rg-sub">邀请改用 6 位编号短链接，不再用一长串钱包地址。填入你的 Agent 钱包地址，页面会按内置编号对照表生成短链接（如 <span class="mono">?ref=859872</span>）。对方通过短链接进来并完成首次签到，邀请奖励记在你名下。</p>
-        <div class="my-ref-badge" id="my-ref-badge">我的邀请编号：<b id="my-ref-num">—</b><span class="hint" id="my-ref-hint">连接钱包后自动识别 · 部署者编号 859872</span></div>
+        <div class="my-ref-badge" id="my-ref-badge">我的邀请编号：<b id="my-ref-num">—</b><span class="hint" id="my-ref-hint">部署者编号 859872</span></div>
         <div class="refgen-row">
           <input type="text" id="ref-input" placeholder="输入 Agent 钱包地址（0x…）或 6 位邀请编号（如 859872）" autocomplete="off" spellcheck="false" />
           <button class="btn btn-gold" id="btn-refgen" type="button">生成短编号链接</button>
@@ -782,7 +764,7 @@
           <div class="stat"><div class="k">我的邀请人数（预览）</div><div class="v" id="stat-invites">0</div></div>
           <div class="stat"><div class="k">我的邀请积分（预览）</div><div class="v" id="stat-invite-points">0 分</div></div>
         </div>
-        <p class="ref-note">邀请链接已改用 6 位编号：<span class="mono">?ref=</span> 后面是编号，页面打开时按内置对照表解析成钱包地址再传给签到合约；旧的 <span class="mono">?ref=0x…</span> 地址链接仍兼容。签到合约已部署上链，上面的邀请人数与邀请积分是本页的<b>预览计数</b>，不代表真实邀请记录；<b>一切以链上数据为准</b>，可在 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对签到合约记录。</p>
+        <p class="ref-note">邀请链接已改用 6 位编号：<span class="mono">?ref=</span> 后面是编号，对方的 Agent 签到时会先到公开注册表 <span class="mono">ref-codes.json</span> 把编号解析成邀请人地址，再作为 referrer 传给签到合约；旧的 <span class="mono">?ref=0x…</span> 地址链接仍兼容。签到合约已部署上链，上面的邀请人数与邀请积分是本页的<b>预览计数</b>，不代表真实邀请记录；<b>一切以链上数据为准</b>，可在 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对签到合约记录。</p>
       </div>
     </div>
   </section>
@@ -950,7 +932,7 @@
     <details open>
       <summary>签到必须用币安 Agent 钱包吗？普通钱包为什么签不了？</summary>
       <p>是的，必须用<b>持有 Agent ID 的那个地址</b>签到，而 Agent ID 是领在币安 Agent 钱包地址上的，所以要用币安 Agent 钱包那个地址来签。签到合约会检查你地址在 Agent ID 合约里的 <span class="mono">balanceOf</span>：普通钱包地址里没有 Agent ID，<span class="mono">balanceOf</span> 为 0，合约会直接拒绝，交易失败——这不是网站坏了，是资格不满足。</p>
-      <p>请注意：<b>不要在任何网站上扫码登录 Agent 钱包，也不要输入配对码</b>，本站不会让你这样做。正确的签到方式只有两种：<b>1）</b>在币安 App 内置浏览器里打开本网站，用持有 Agent ID 的钱包连接签到；<b>2）</b>通过你自己的 AI 代理，从你的 Agent 钱包地址调用签到合约，再由你在币安 App 里确认交易。</p>
+      <p>请注意：<b>不要在任何网站上扫码登录 Agent 钱包，也不要输入配对码</b>，本站不会让你这样做。Agent 钱包不向网页提供连接能力，网页签不了到；正确的签到方式只有一种：通过你自己的 AI 代理，从你的 Agent 钱包地址调用签到合约，再由你在币安 App 里确认交易。</p>
     </details>
     <details>
       <summary>签到积分具体怎么算？</summary>
@@ -997,28 +979,6 @@
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
   };
 
-  var state = {
-    account: null,
-    chainOk: false,
-    hasAgentId: null,   // null=未检查
-    previewToday: false,
-    onchain: null,      // 连接钱包后读到的链上状态 { points, days, today }
-    txPending: false,
-    points: 0,
-    days: 0,
-    previewDays: {}     // 预览模式本地记录 { 'YYYY-MM-DD': true }
-  };
-
-  /* 函数选择器（keccak256 前 4 字节，已按合约源码核对） */
-  var SEL = {
-    balanceOf: "0x70a08231",        // Agent ID: balanceOf(address)
-    checkIn: "0xd9a59e33",          // 签到: checkIn(address referrer)
-    pointsOf: "0xcf6a4403",         // 签到: pointsOf(address) 有效积分
-    checkInCount: "0x9ec11dff",     // 签到: checkInCount(address)
-    hasCheckedInToday: "0x3504f52b" // 签到: hasCheckedInToday(address)
-  };
-  var ZERO_ADDR = "0x0000000000000000000000000000000000000000";
-
   /* ============ 邀请编号对照表（6 位编号 ↔ 钱包地址） ============ */
   var SITE_BASE = "https://ztpipixia.github.io/agentcheck-daily/";
   var REF_CODE_MAP = {
@@ -1044,23 +1004,6 @@
     if (/^0x[0-9a-fA-F]{40}$/.test(v)) return v;
     return null;
   }
-  function updateMyRefBadge(){
-    var numEl = document.getElementById("my-ref-num");
-    var hintEl = document.getElementById("my-ref-hint");
-    if (!numEl) return;
-    var code = state.account ? codeForAddress(state.account) : null;
-    if (code){
-      numEl.textContent = code;
-      if (hintEl) hintEl.textContent = "已连接 " + shortAddr(state.account);
-    } else if (state.account){
-      numEl.textContent = "暂未分配";
-      if (hintEl) hintEl.textContent = "当前地址不在编号对照表内";
-    } else {
-      numEl.textContent = "—";
-      if (hintEl) hintEl.textContent = "连接钱包后自动识别 · 部署者编号 859872";
-    }
-  }
-
   function $(id){ return document.getElementById(id); }
   function utcDateStr(ts){
     var d = new Date(ts);
@@ -1107,265 +1050,12 @@
       cell.className = "d";
       if (ds === todayStr) cell.className += " today";
       if (t < Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())) cell.className += " past";
-      if (state.previewDays[ds]) cell.className += " done";
       cell.innerHTML = "<span class='dn'>" + d.getUTCDate() + "</span>" + (d.getUTCMonth()+1) + "月";
       cell.title = ds + " (UTC)";
       cal.appendChild(cell);
     }
   }
   renderCal();
-
-  /* ============ 消息 ============ */
-  function showMsg(text, kind){
-    var m = $("console-msg");
-    m.textContent = text;
-    m.className = "msg show " + (kind || "info");
-  }
-  function hideMsg(){ $("console-msg").className = "msg"; }
-
-  /* ============ 状态渲染 ============ */
-  function setLi(id, mode){
-    var li = $(id);
-    li.classList.remove("done","fail");
-    if (mode) li.classList.add(mode);
-  }
-  function render(){
-    var preview = $("preview-mode").checked;
-    // 展示值来源：预览模式用本地模拟值；已连接钱包用链上读到的真实值；未连接显示 —
-    var dispToday;
-    if (preview){
-      $("stat-points").textContent = state.points + "（预览）";
-      $("stat-days").textContent = state.days;
-      dispToday = state.previewToday;
-    } else if (state.onchain){
-      $("stat-points").textContent = state.onchain.points;
-      $("stat-days").textContent = state.onchain.days;
-      dispToday = state.onchain.today;
-    } else {
-      $("stat-points").textContent = "—";
-      $("stat-days").textContent = "—";
-      dispToday = false;
-    }
-    $("stat-today").innerHTML = dispToday
-      ? "<span class='badge badge-ok'>已签到</span>"
-      : "<span class='badge badge-wait'>待签到</span>";
-    if (state.hasAgentId === true) $("stat-agent").innerHTML = "<span class='badge badge-ok'>持有</span>";
-    else if (state.hasAgentId === false) $("stat-agent").innerHTML = "<span class='badge badge-no'>未持有</span>";
-    else $("stat-agent").innerHTML = "<span class='badge badge-wait'>未检查</span>";
-    // 清单
-    setLi("ck-wallet", state.account ? (state.chainOk ? "done" : "fail") : "");
-    setLi("ck-agent", state.hasAgentId ? "done" : (state.hasAgentId === false ? "fail" : ""));
-    setLi("ck-period", inPeriod() ? "done" : "fail");
-    setLi("ck-today", dispToday ? "done" : "");
-    // 按钮
-    var btn = $("btn-checkin");
-    if (!inPeriod()){ btn.disabled = true; btn.textContent = "不在投稿期内"; }
-    else if (preview){
-      if (state.previewToday){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
-      else { btn.disabled = false; btn.textContent = "预览签到 +10 分（不上链）"; }
-    }
-    else if (state.txPending){ btn.disabled = true; btn.textContent = "签到确认中…"; }
-    else if (state.onchain && state.onchain.today){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
-    else if (!state.account){ btn.disabled = true; btn.textContent = "请先连接钱包"; }
-    else if (!state.chainOk){ btn.disabled = true; btn.textContent = "请先在钱包里切换到 BSC 网络"; }
-    else if (state.hasAgentId === false){ btn.disabled = true; btn.textContent = "该地址没有 Agent ID，无法签到"; }
-    else if (state.hasAgentId === true){ btn.disabled = false; btn.textContent = "今日签到 +10 分"; }
-    else { btn.disabled = true; btn.textContent = "正在读取链上状态…"; }
-    updateMyRefBadge();
-  }
-
-  /* ============ 钱包连接（仅浏览器注入式 window.ethereum） ============ */
-  function padAddr(a){
-    return String(a).toLowerCase().replace("0x", "").padStart(64, "0");
-  }
-  function ethCall(to, data){
-    return window.ethereum.request({ method: "eth_call", params: [{ to: to, data: data }, "latest"] });
-  }
-  function callUint(to, data){
-    return ethCall(to, data).then(function(res){
-      if (!res || res === "0x") return 0;
-      return Number(BigInt(res));
-    });
-  }
-  function renderConnectBtn(){
-    var btn = $("btn-connect");
-    if (state.account){
-      btn.disabled = false;
-      btn.textContent = "已连接 · " + shortAddr(state.account) + "（点此刷新）";
-    } else {
-      btn.disabled = false;
-      btn.textContent = "连接钱包";
-    }
-    var disc = $("btn-disconnect");
-    if (disc) disc.style.display = state.account ? "" : "none";
-  }
-  /* 断开连接：先清页面状态；钱包支持 wallet_revokePermissions 时顺带撤销本站授权，不支持或失败都静默忽略 */
-  function disconnectWallet(){
-    var eth = window.ethereum;
-    state.account = null;
-    state.chainOk = false;
-    state.hasAgentId = null;
-    state.onchain = null;
-    state.txPending = false;
-    renderConnectBtn(); render();
-    showMsg("已断开钱包连接，页面上的地址、积分与签到状态已恢复到未连接显示。需要时点「连接钱包」重新连接，钱包会重新弹出确认。", "info");
-    if (eth && eth.request){
-      try {
-        var p = eth.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] });
-        if (p && p.catch) p.catch(function(){});
-      } catch (e) {}
-    }
-  }
-  $("btn-disconnect").addEventListener("click", disconnectWallet);
-  /* 连接后（或账户/网络变化后）从链上读：Agent ID balanceOf、积分、签到天数、今日是否已签 */
-  function refreshChainState(){
-    if (!state.account || !state.chainOk || !window.ethereum) return Promise.resolve();
-    var acct = state.account;
-    return Promise.all([
-      callUint(CONFIG.agentIdContract, SEL.balanceOf + padAddr(acct)),
-      callUint(CONFIG.checkInContract, SEL.pointsOf + padAddr(acct)),
-      callUint(CONFIG.checkInContract, SEL.checkInCount + padAddr(acct)),
-      callUint(CONFIG.checkInContract, SEL.hasCheckedInToday + padAddr(acct))
-    ]).then(function(r){
-      if (state.account !== acct) return; // 期间切换了账户，丢弃旧结果
-      state.hasAgentId = r[0] > 0;
-      state.onchain = { points: r[1], days: r[2], today: r[3] === 1 };
-      render();
-    }).catch(function(){
-      showMsg("读取链上状态失败，请确认钱包在 BSC 网络后点「连接钱包」刷新重试。", "err");
-    });
-  }
-  $("btn-connect").addEventListener("click", function(){
-    if (!window.ethereum){
-      showMsg("没有检测到浏览器钱包插件：请先安装 MetaMask、币安钱包插件或 Trust Wallet 等浏览器钱包后再点连接；也可以在币安 App 内置浏览器打开本站，用持有 Agent ID 的钱包连接。本站只用浏览器注入式连接，不扫码、不用配对码、不用 WalletConnect。", "warn");
-      return;
-    }
-    var btn = $("btn-connect");
-    btn.disabled = true;
-    btn.textContent = "连接中，请在钱包弹窗里确认…";
-    window.ethereum.request({ method: "eth_requestAccounts" }).then(function(accounts){
-      if (!accounts || !accounts.length) throw new Error("no-account");
-      state.account = accounts[0];
-      return window.ethereum.request({ method: "eth_chainId" });
-    }).then(function(chainId){
-      if (chainId === CONFIG.chainHex){ state.chainOk = true; return; }
-      // 不在 BSC：请用户在自己钱包里切换网络（仍由钱包弹窗确认）
-      return window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: CONFIG.chainHex }] })
-        .then(function(){ return window.ethereum.request({ method: "eth_chainId" }); })
-        .then(function(cid2){ state.chainOk = (cid2 === CONFIG.chainHex); })
-        .catch(function(){ state.chainOk = false; });
-    }).then(function(){
-      renderConnectBtn(); render();
-      if (!state.chainOk){
-        showMsg("已连接 " + shortAddr(state.account) + "，但当前钱包不在 BSC 网络（Chain ID 56）。请在钱包里切换到 BSC 后，再点连接按钮刷新。", "warn");
-        return;
-      }
-      return refreshChainState().then(function(){
-        if (state.hasAgentId === true){
-          if (state.onchain && state.onchain.today){
-            showMsg("已连接 " + shortAddr(state.account) + "：该地址持有 Agent ID，今天已经签到过了，明天再来。积分与签到天数已从链上读出。", "info");
-          } else {
-            showMsg("已连接 " + shortAddr(state.account) + "：该地址持有 Agent ID，可以签到。点下方「今日签到 +10 分」，在钱包弹窗里确认交易即可。", "info");
-          }
-        } else if (state.hasAgentId === false){
-          showMsg("已连接 " + shortAddr(state.account) + "，但该地址没有 Agent ID（balanceOf = 0），签不了到。正确方式：在币安 App 内置浏览器里打开本站、用持有 Agent ID 的钱包连接，或通过自己的 AI 代理从 Agent 钱包地址签到。", "warn");
-        }
-      });
-    }).catch(function(err){
-      renderConnectBtn(); render();
-      if (err && err.code === 4001){
-        showMsg("你取消了钱包连接。连接需由你在钱包自带弹窗里确认，本站不会代为连接。", "warn");
-      } else {
-        showMsg("连接失败，请确认钱包已解锁后重试。", "err");
-      }
-    });
-  });
-  if (window.ethereum && window.ethereum.on){
-    window.ethereum.on("accountsChanged", function(accounts){
-      if (!accounts || !accounts.length){
-        var wasConnected = !!state.account;
-        state.account = null; state.chainOk = false; state.hasAgentId = null; state.onchain = null; state.txPending = false;
-        renderConnectBtn(); render();
-        // 页面内点「断开连接」时状态已先清空，这里不再重复提示
-        if (wasConnected) showMsg("钱包已断开或切换到未连接状态，点「连接钱包」可重新连接。", "warn");
-        return;
-      }
-      state.account = accounts[0];
-      state.hasAgentId = null; state.onchain = null;
-      renderConnectBtn();
-      window.ethereum.request({ method: "eth_chainId" }).then(function(cid){
-        state.chainOk = (cid === CONFIG.chainHex);
-        if (state.chainOk) refreshChainState(); else render();
-      });
-    });
-    window.ethereum.on("chainChanged", function(cid){
-      state.chainOk = (cid === CONFIG.chainHex);
-      if (state.chainOk && state.account) refreshChainState(); else render();
-    });
-  }
-
-  /* ============ 签到 ============ */
-  $("btn-checkin").addEventListener("click", function(){
-    var preview = $("preview-mode").checked;
-    if (preview){
-      // 本地预览：只改本页内存状态，不发交易
-      var ds = utcDateStr(Date.now());
-      if (state.previewDays[ds]){ showMsg("今天已经在预览中签到过了。", "warn"); return; }
-      state.previewDays[ds] = true;
-      state.previewToday = true;
-      state.points += CONFIG.pointsPerDay;
-      state.days += 1;
-      renderCal(); render();
-      showMsg("预览签到完成：+10 分（本地模拟，未上链、不计入正式积分）。正式签到请先连接钱包，用持有 Agent ID 的地址在钱包弹窗里确认签到交易。", "info");
-      return;
-    }
-    if (!state.account || !state.chainOk || state.hasAgentId !== true){
-      showMsg("请先点上方「连接钱包」，用持有 Agent ID 的地址连接后再签到；没有 Agent ID 的地址签不了到。", "warn");
-      return;
-    }
-    if (state.onchain && state.onchain.today){ showMsg("今天已经签到过了，明天再来。", "warn"); return; }
-    // 邀请人：?ref= 为 6 位编号时按对照表解析成地址，?ref= 为 0x 地址时直接兼容；不是自己时才传给合约，否则传零地址（合约只在首次签到时认邀请）
-    var referrer = ZERO_ADDR;
-    try {
-      var ref = new URLSearchParams(location.search).get("ref");
-      var resolved = resolveRefParam(ref);
-      if (resolved && resolved.toLowerCase() !== state.account.toLowerCase()) referrer = resolved;
-    } catch (e) {}
-    state.txPending = true; render();
-    window.ethereum.request({
-      method: "eth_sendTransaction",
-      params: [{ from: state.account, to: CONFIG.checkInContract, data: SEL.checkIn + padAddr(referrer) }]
-    }).then(function(txHash){
-      showMsg("签到交易已提交（" + String(txHash).slice(0, 10) + "…），正在等链上确认，稍后会自动刷新你的积分。签到交易由你在钱包里确认，本站不代签。", "info");
-      setTimeout(function(){
-        refreshChainState().then(function(){
-          state.txPending = false; render();
-          if (state.onchain && state.onchain.today){
-            showMsg("签到成功：+10 分已上链，积分与签到天数已刷新。", "info");
-          }
-        });
-      }, 5000);
-    }).catch(function(err){
-      state.txPending = false; render();
-      if (err && err.code === 4001){
-        showMsg("你取消了签到交易，签到未完成。签到需由你在钱包弹窗里确认，本站不代签。", "warn");
-      } else {
-        var detail = err && err.message ? String(err.message).slice(0, 180) : "未知错误";
-        showMsg("签到交易未成功：" + detail, "err");
-      }
-    });
-  });
-
-  $("preview-mode").addEventListener("change", function(){
-    if (!this.checked){
-      state.previewDays = {}; state.points = 0; state.days = 0; state.previewToday = false;
-      renderCal();
-      showMsg("已退出预览模式，本地模拟记录已清空。", "info");
-    } else {
-      showMsg("已进入界面预览模式：签到只在本地模拟，不上链、不产生有效积分。", "warn");
-    }
-    render();
-  });
 
   /* ============ 复制 ============ */
   function copyText(text, btn, doneLabel, idleLabel){
@@ -1401,6 +1091,12 @@
     b.addEventListener("click", function(){
       copyText(b.getAttribute("data-copy"), b, "已复制", "复制");
     });
+  });
+
+  /* ============ 复制签到指令 ============ */
+  $("btn-copy-cmd").addEventListener("click", function(){
+    var t = $("agent-cmd-text").textContent.replace(/\s+/g, " ").trim();
+    copyText(t, this, "已复制，去发给你的 Agent", "复制签到指令");
   });
 
   /* ============ 测算器 ============ */
@@ -1461,14 +1157,9 @@
   }
   $("btn-refgen").addEventListener("click", function(){
     var v = $("ref-input").value.trim();
-    // 输入为空时，若已连接钱包且该地址有编号，直接用已连接地址的编号生成
-    if (!v && state.account){
-      var myCode0 = codeForAddress(state.account);
-      if (myCode0) v = myCode0;
-    }
     if (!v){
       hideRefOut();
-      showRefMsg("请先填入你的 Agent 钱包地址或 6 位邀请编号（如 859872），或先连接钱包。", "warn");
+      showRefMsg("请先填入你的 Agent 钱包地址或 6 位邀请编号（如 859872）。", "warn");
       return;
     }
     var code = null;
@@ -1569,8 +1260,6 @@
     if (HASH_VIEW[h]) initialView = HASH_VIEW[h];
   } catch (e) {}
   switchView(initialView);
-
-  render();
 })();
 </script>
 </body>
