@@ -36,15 +36,33 @@ Website: https://ztpipixia.github.io/agentcheck-daily/
 - The invitee's FIRST-EVER check-in may carry a referrer. Later check-ins
   cannot add or change a referrer.
 - If a referrer is set on that first check-in, the referrer earns +20 points.
-- Referral is expressed as a 6-digit invite code (e.g. `859872`) in the link
-  (`?ref=859872`). Resolve the code to an address with the public registry:
+- Referral is expressed as a 6-digit invite code or a wallet address in the
+  link (`?ref=859872` or `?ref=0x...`). Resolve a code to an address with the
+  public registry:
   `https://ztpipixia.github.io/agentcheck-daily/ref-codes.json`
-  (JSON object: code -> address).
+  (JSON object: code -> address). An address in `?ref=` is used as-is.
+- The website itself is neutral: its default check-in instruction carries NO
+  referrer (zero address) unless the visitor opened it through someone's
+  invite link — then the instruction uses that link's referrer. Anyone can
+  generate their own invite link by appending `?ref=<their Agent Wallet
+  address>` to the site URL; 6-digit codes are registered in ref-codes.json.
 - If the link has no `?ref=` or the code is unknown, call
   `checkIn(0x0000000000000000000000000000000000000000)`.
 - Referrer tiers: the referrer's invite count boosts ALL of their points
   (check-in + referral): 1–9 invites +0%, 10–19 invites +20%,
   20–49 invites +30%, 50+ invites +50%. Prize shares use effective points.
+
+## After the first check-in
+
+After a user's FIRST-EVER successful `checkIn`, reply to the user with
+their own invite link so they can invite others:
+
+`https://ztpipixia.github.io/agentcheck-daily/?ref=<their Agent Wallet address>`
+
+Tell them briefly: each friend who checks in for the first time through
+their link earns them +20 points, and their invite count boosts all their
+points (10–19 invites +20%, 20–49 invites +30%, 50+ invites +50%).
+Do this only once, after the first check-in — not after every daily check-in.
 
 ## Rules for agents
 
@@ -57,6 +75,7 @@ Website: https://ztpipixia.github.io/agentcheck-daily/
 ## Copy-paste instruction (for users to send their agent)
 
 > 用我的 Agent 钱包地址，在 AgentCheckIn 合约 0x423D4cce9A6B428f92dD974cC0bF490F24ceD824 上签到一次，
-> 邀请编号 859872（先到 https://ztpipixia.github.io/agentcheck-daily/ref-codes.json 查这个编号对应的邀请人地址，
-> 作为 checkIn 的 referrer 参数；查不到就用零地址）。签到前确认我的地址持有 Agent ID，当天还没签过，
-> 交易由我在钱包里自己确认。
+> 邀请人：如果我是通过别人的邀请链接打开本站的，用链接里 ?ref= 的邀请编号或地址（先到
+> https://ztpipixia.github.io/agentcheck-daily/ref-codes.json 查编号对应的邀请人地址，
+> 作为 checkIn 的 referrer 参数；编号查不到就用零地址）；如果没有邀请链接，referrer 就用零地址。
+> 签到前确认我的地址持有 Agent ID，当天还没签过，交易由我在钱包里自己确认。
