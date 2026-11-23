@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>AgentCheck Daily — Agent ID 每日签到</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f4f6f2; --bg2:#ecefe9; --surface:#ffffff; --surface2:#f8faf7;
+    --ink:#13211b; --ink2:#3d4f45; --muted:#68796f; --line:#dde3da; --line2:#cbd5c8;
+    --accent:#0e7a5f; --accent-strong:#095c47; --accent-soft:#e3f2ec; --accent-ink:#0b4f3d;
+    --gold:#a86f14; --gold-soft:#fdf3dd; --gold-line:#ecd28f;
+    --warn-bg:#fff8e8; --warn-line:#e9cd85; --warn-ink:#6d5310;
+    --danger:#b3352b; --danger-soft:#fdecea;
+    --ok:#0e7a5f;
+    --radius:14px; --radius-lg:20px;
+    --shadow:0 10px 30px rgba(19,33,27,.08), 0 2px 6px rgba(19,33,27,.05);
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:"Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d130f; --bg2:#0a0f0c; --surface:#151d17; --surface2:#18211a;
+      --ink:#e9f0ea; --ink2:#c3d2c6; --muted:#93a698; --line:#263329; --line2:#33443a;
+      --accent:#2fbf9b; --accent-strong:#4ed3ae; --accent-soft:#14352a; --accent-ink:#8fe3c8;
+      --gold:#e0aa3e; --gold-soft:#2c2410; --gold-line:#5c4a1c;
+      --warn-bg:#2a2210; --warn-line:#5c4a1c; --warn-ink:#f0d48a;
+      --danger:#f08a80; --danger-soft:#3a1d1a;
+      --shadow:0 10px 30px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.3);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:36px}
+  a{color:var(--accent-strong)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 64px}
+  .mono{font-family:var(--mono)}
+
+  /* ---------- status strip ---------- */
+  .strip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px 0 0;font-size:13px;color:var(--muted)}
+  .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-weight:500;color:var(--ink2)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+  .dot.pending{background:var(--gold)}
+  .pill b{color:var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:start;padding:26px 0 8px}
+  .hero h1{font-size:clamp(34px,5.2vw,54px);line-height:1.12;margin:10px 0 14px;font-weight:900;letter-spacing:-.01em}
+  .hero h1 .hl{color:var(--accent)}
+  .lede{font-size:17px;color:var(--ink2);margin:0 0 18px;max-width:34em}
+  .lede strong{color:var(--ink)}
+  .condbox{border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:var(--radius);padding:14px 16px;font-size:14.5px;color:var(--ink)}
+  .condbox b{color:var(--gold)}
+  .countdown{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .cd-cell{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:76px;padding:10px 12px;text-align:center}
+  .cd-cell .n{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1.1}
+  .cd-cell .u{font-size:12px;color:var(--muted)}
+  .cd-note{font-size:13px;color:var(--muted);margin-top:10px}
+
+  /* ---------- console ---------- */
+  .console{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:22px;position:sticky;top:16px}
+  .console h2{margin:0 0 4px;font-size:20px;font-weight:900}
+  .console .sub{font-size:13.5px;color:var(--muted);margin:0 0 16px}
+  .btn{appearance:none;border:0;cursor:pointer;font-family:var(--sans);font-weight:700;border-radius:12px;padding:10px 18px;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s ease, background .15s ease;text-decoration:none}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-strong)}
+  .btn-ghost{background:var(--surface2);color:var(--ink);border:1px solid var(--line2)}
+  .btn-ghost:hover{border-color:var(--accent)}
+  .btn-big{width:100%;font-size:17px;padding:14px 18px;border-radius:14px;margin-top:14px}
+  .btn[disabled]{opacity:.48;cursor:not-allowed}
+  .addr{font-family:var(--mono);font-size:13px;word-break:break-all;background:var(--surface2);border:1px dashed var(--line2);border-radius:10px;padding:9px 12px;margin-top:12px;display:none}
+  .addr.show{display:block}
+  .statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .stat{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface2)}
+  .stat .k{font-size:12.5px;color:var(--muted)}
+  .stat .v{font-size:20px;font-weight:900;line-height:1.3}
+  .stat .v.small{font-size:15px;font-weight:700}
+  .badge{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;vertical-align:2px}
+  .badge-ok{background:var(--accent-soft);color:var(--accent-ink)}
+  .badge-no{background:var(--danger-soft);color:var(--danger)}
+  .badge-wait{background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line)}
+  .checklist{list-style:none;margin:16px 0 0;padding:0;font-size:14px}
+  .checklist li{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line);color:var(--ink2)}
+  .checklist li:first-child{border-top:0}
+  .ck{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:12px;color:transparent;margin-top:2px}
+  li.done .ck{background:var(--accent);border-color:var(--accent);color:#fff}
+  li.fail .ck{border-color:var(--danger);color:var(--danger)}
+  .msg{margin-top:14px;font-size:14px;border-radius:10px;padding:10px 12px;display:none}
+  .msg.show{display:block}
+  .msg.info{background:var(--accent-soft);color:var(--accent-ink)}
+  .msg.warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
+  .msg.err{background:var(--danger-soft);color:var(--danger)}
+  .preview-toggle{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:12px;border:1px dashed var(--line2);border-radius:12px;font-size:13.5px;color:var(--ink2);cursor:pointer}
+  .preview-toggle input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+  .snapshot{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:11px 14px;font-size:13.5px;color:var(--accent-ink)}
+  .snapshot b{font-family:var(--mono);font-size:15px}
+  .snapshot .snap-note{width:100%;font-size:12.5px;opacity:.85}
+  .examples{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .example{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .example .ex-tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line);margin-bottom:8px}
+  .example p{margin:0;font-size:14.5px;color:var(--ink2)}
+  .example .ex-result{font-size:19px;font-weight:900;color:var(--ink);margin-top:8px}
+  .example .ex-result .mono{color:var(--accent-strong)}
+  .lb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  .lb-stats .stat .v{font-size:26px}
+  @media (max-width:900px){ .examples,.lb-stats{grid-template-columns:1fr} }
+
+  /* ---------- wallet guide ---------- */
+  .wallet-guide{border:1px solid var(--line2);background:var(--surface2);border-radius:var(--radius);padding:22px 24px;margin:0 0 20px}
+  .wallet-guide h3{margin:0 0 14px;font-size:16px;font-weight:900;color:var(--ink)}
+  .wallet-guide ol{margin:0;padding-left:22px;font-size:14.5px;line-height:1.75;color:var(--ink)}
+  .wallet-guide li{margin:12px 0}
+  .wallet-guide li:first-child{margin-top:0}
+  .wallet-guide li:last-child{margin-bottom:0}
+  .wallet-guide li strong{color:var(--ink)}
+  .wallet-guide .wg-no{font-weight:900;color:var(--danger)}
+
+  /* ---------- calendar ---------- */
+  .cal{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin-top:14px}
+  .cal .d{border:1px solid var(--line);border-radius:9px;text-align:center;padding:7px 2px;font-size:12px;background:var(--surface2);color:var(--muted)}
+  .cal .d .dn{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink2);display:block}
+  .cal .d.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .cal .d.done{background:var(--accent);border-color:var(--accent);color:#dff5ec}
+  .cal .d.done .dn{color:#fff}
+  .cal .d.past{opacity:.55}
+  .cal-legend{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+  /* ---------- sections ---------- */
+  section{margin-top:52px}
+  .sec-head h2{font-size:clamp(24px,3.4vw,32px);font-weight:900;margin:0 0 6px;letter-spacing:-.01em}
+  .sec-head p{color:var(--muted);margin:0;max-width:46em;font-size:15.5px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .card .num{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600}
+  .card h3{margin:6px 0 6px;font-size:17px}
+  .card p{margin:0;font-size:14.5px;color:var(--ink2)}
+
+  .splitbar{display:flex;height:56px;border-radius:14px;overflow:hidden;margin-top:20px;border:1px solid var(--line)}
+  .splitbar .half{display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:#fff;text-align:center;padding:0 10px}
+  .splitbar .a{background:var(--accent);flex:1}
+  .splitbar .b{background:#3d4f45;flex:1}
+  .split-legend{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .split-legend .card h3{margin-top:0}
+
+  table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:18px;font-size:14.5px}
+  th,td{padding:12px 14px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
+  thead th{border-top:0;background:var(--surface2);font-size:13px;color:var(--muted);font-weight:700}
+  td.num,th.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+  .tbl-note{font-size:13px;color:var(--muted);margin-top:10px}
+
+  .calc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;margin-top:20px}
+  .calc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+  .field input[type="number"]{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:16px;background:var(--surface2);color:var(--ink)}
+  .field input[type="range"]{width:100%;accent-color:var(--accent);min-height:36px}
+  .calc-out{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+  .calc-out .o{flex:1;min-width:180px;background:var(--accent-soft);border-radius:12px;padding:14px 16px}
+  .calc-out .o .k{font-size:13px;color:var(--accent-ink)}
+  .calc-out .o .v{font-size:24px;font-weight:900;color:var(--accent-ink);font-family:var(--mono)}
+  .calc-out .o.alt{background:var(--gold-soft)}
+  .calc-out .o.alt .k,.calc-out .o.alt .v{color:var(--gold)}
+
+  /* ---------- invite ---------- */
+  .invite-feature{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:var(--radius-lg);padding:26px 24px 24px;box-shadow:var(--shadow)}
+  .invite-tag{display:inline-block;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 12px;margin-bottom:10px}
+  .invite-rules{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
+  .invite-rules .card h3{margin-top:0}
+  .refgen{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;margin-top:20px}
+  .refgen h3{margin:0 0 4px;font-size:18px}
+  .refgen .rg-sub{margin:0 0 16px;font-size:14px;color:var(--muted)}
+  .refgen-row{display:flex;gap:10px;flex-wrap:wrap}
+  .refgen-row input[type="text"]{flex:1;min-width:220px;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-size:15px;background:var(--surface2);color:var(--ink)}
+  .ref-out{display:none;margin-top:14px}
+  .ref-out.show{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+  .ref-out .link{flex:1;min-width:220px;font-family:var(--mono);font-size:13px;word-break:break-all;background:var(--accent-soft);color:var(--accent-ink);border:1px dashed var(--line2);border-radius:10px;padding:10px 12px}
+  .ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+  .ref-note{font-size:13px;color:var(--muted);margin-top:10px}
+
+  .empty{border:1.5px dashed var(--line2);border-radius:var(--radius);padding:34px 20px;text-align:center;background:var(--surface);margin-top:18px}
+  .empty .big{font-size:17px;font-weight:900;margin-bottom:4px}
+  .empty p{color:var(--muted);font-size:14px;margin:0 auto;max-width:40em}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  .kv{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .kv h3{margin:0 0 10px;font-size:17px}
+  .kv p,.kv li{font-size:14.5px;color:var(--ink2)}
+  .kv ul{margin:8px 0 0;padding-left:20px}
+  .kv li{margin:5px 0}
+  .contract-row{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;border-top:1px solid var(--line);padding:11px 0}
+  .contract-row:first-of-type{border-top:0}
+  .contract-row .name{font-weight:700;font-size:14px}
+  .contract-row .desc{font-size:12.5px;color:var(--muted)}
+  .contract-row .val{font-family:var(--mono);font-size:12.5px;word-break:break-all;text-align:right;max-width:62%}
+  .copy-btn{border:1px solid var(--line2);background:var(--surface2);border-radius:8px;font-size:12px;padding:4px 10px;cursor:pointer;font-family:var(--sans);color:var(--ink2);flex:none;margin-left:8px;min-height:32px}
+  .todo{color:var(--gold);font-weight:700}
+
+  .risk{border:1px solid var(--warn-line);background:var(--warn-bg);border-radius:var(--radius-lg);padding:22px;margin-top:20px}
+  .risk h3{margin:0 0 8px;color:var(--warn-ink);font-size:18px}
+  .risk ul{margin:0;padding-left:20px;color:var(--warn-ink);font-size:14.5px}
+  .risk li{margin:6px 0}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-top:12px;padding:4px 18px}
+  summary{cursor:pointer;font-weight:700;padding:12px 0;font-size:15.5px}
+  details p{font-size:14.5px;color:var(--ink2);margin:0 0 14px}
+  footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;font-size:13px;color:var(--muted)}
+  footer p{margin:6px 0}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .console{position:static}
+    .cards,.calc-grid,.two,.split-legend,.invite-rules,.ref-stats{grid-template-columns:1fr}
+    .cal{grid-template-columns:repeat(6,1fr)}
+    .contract-row{flex-direction:column}
+    .contract-row .val{text-align:left;max-width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="strip">
+    <span class="pill"><span class="dot"></span> 投稿期进行中 · <b>2026-11-18 — 12-09 08:00 UTC</b></span>
+    <span class="pill">网络 · <b>BSC（Chain ID 56）</b></span>
+    <span class="pill"><span class="dot"></span> 签到合约 · <b>已部署 · BSC 主网</b></span>
+    <span class="pill">分发合约 · <b>已部署</b></span>
+    <span class="pill">独立参赛项目 · 非官方页面</span>
+  </div>
+
+  <div class="hero">
+    <div>
+      <h1>每天签到一次，<br />攒积分，<span class="hl">获奖才分奖</span>。</h1>
+      <p class="lede">AgentCheck Daily 是一个面向 <strong>Agent ID（.ai 域名）持有者</strong>的每日签到应用。投稿期内每天可签到 1 次、攒 10 分积分。<strong>若本项目在 Agent ID 黑客松中获奖</strong>，项目方将把奖金的 <strong>50%</strong> 按积分比例分给投稿期内签到过的持有者，另外 50% 留给项目方。</p>
+      <div class="condbox">
+        <b>先说清楚条件：</b>只有获奖才有可分奖金；没有获奖就没有分配。实际金额取决于最终获奖名次与参赛规则，签到本身不产生任何收益，积分也不能兑换、转让或交易。
+      </div>
+      <div class="countdown" id="countdown" aria-label="投稿期倒计时">
+        <div class="cd-cell"><div class="n" id="cd-d">--</div><div class="u">天</div></div>
+        <div class="cd-cell"><div class="n" id="cd-h">--</div><div class="u">时</div></div>
+        <div class="cd-cell"><div class="n" id="cd-m">--</div><div class="u">分</div></div>
+        <div class="cd-cell"><div class="n" id="cd-s">--</div><div class="u">秒</div></div>
+      </div>
+      <p class="cd-note">距离投稿期结束（2026-12-09 08:00 UTC，台北时间 12-09 16:00）。结束后签到不再计入积分。</p>
+      <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
+      <p class="cal-legend">投稿期共 22 个 UTC 日期（11 月 18 日至 12 月 9 日）。每天以 UTC 日期为准，同一地址每天最多签到 1 次。</p>
+    </div>
+
+    <div class="console" id="console">
+      <h2>签到台</h2>
+      <p class="sub">签到资格只看签到地址是否持有 Agent ID：页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断。本页不提供网页登录钱包的入口，请按下方说明操作。</p>
+      <div class="wallet-guide" aria-label="钱包连接说明">
+        <h3>钱包连接说明</h3>
+        <ol>
+          <li>签到必须用<b>持有 Agent ID 的币安 Agent 钱包地址</b>，普通钱包没 ID 签不了。</li>
+          <li><span class="wg-no">不要</span>在网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</li>
+          <li><strong>正确签法一：</strong>在币安 App 内置浏览器打开本站签到。</li>
+          <li><strong>正确签法二：</strong>通过自己的 AI 代理从 Agent 钱包地址调签到合约，在 App 里确认。</li>
+        </ol>
+      </div>
+
+      <div class="statgrid">
+        <div class="stat"><div class="k">我的积分</div><div class="v" id="stat-points">—</div></div>
+        <div class="stat"><div class="k">累计签到</div><div class="v" id="stat-days">—</div></div>
+        <div class="stat"><div class="k">今日是否已签到</div><div class="v small" id="stat-today"><span class="badge badge-wait">待签到</span></div></div>
+        <div class="stat"><div class="k">Agent ID 持有状态</div><div class="v small" id="stat-agent"><span class="badge badge-wait">未检查</span></div></div>
+      </div>
+
+      <div class="snapshot" aria-label="链上数据快照">
+        <span>全网签到人数 <b>1</b> 人</span>
+        <span>全网总积分 <b>10</b> 分</span>
+        <span class="snap-note">链上快照（2026-11-23 部署后读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：部署者已完成首次签到，计 10 分。实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+      </div>
+
+      <ul class="checklist">
+        <li id="ck-wallet"><span class="ck">✓</span><span>签到地址位于 BSC 网络（Chain ID 56）</span></li>
+        <li id="ck-agent"><span class="ck">✓</span><span>该地址持有 Agent ID（balanceOf &gt; 0）</span></li>
+        <li id="ck-period"><span class="ck">✓</span><span>当前在投稿期内（截至 2026-12-09 08:00 UTC）</span></li>
+        <li id="ck-today"><span class="ck">✓</span><span>今天（UTC）尚未签到</span></li>
+      </ul>
+
+      <button class="btn btn-primary btn-big" id="btn-checkin" type="button" disabled>今日签到 +10 分</button>
+      <div class="msg" id="console-msg" role="status"></div>
+
+      <label class="preview-toggle">
+        <input type="checkbox" id="preview-mode" />
+        <span><b>界面预览模式</b>：签到合约已部署上链。打开后可在本页本地模拟一次签到流程，<b>不上链、不产生有效积分</b>，刷新页面即清空。正式签到请按上方钱包连接说明操作，以链上记录为准。</span>
+      </label>
+    </div>
+  </div>
+
+  <section class="invite-feature" id="invite">
+    <div class="sec-head">
+      <span class="invite-tag">邀请好友攒分 · 每邀请 1 人首次签到，你 +20 分 · 满 10 人起全部积分按档加成</span>
+      <h2>邀请奖励</h2>
+      <p>基础规则不变：你邀请的 1 个人<b>首次签到</b>成功，你（邀请人）得 <b>+20 分</b>；被邀请人当天按正常签到得 <b>10 分</b>。在此之上，邀请人数达到档位后，你的<b>全部积分</b>（签到积分 + 邀请积分）按比例加成，得到<b>有效积分</b>——分奖金时按有效积分算。加成<b>追溯生效</b>：档位一到，之前已经攒下的积分也一起放大。</p>
+    </div>
+
+    <table aria-label="邀请档位加成表">
+      <thead><tr><th>邀请人数</th><th>全部积分加成</th><th class="num">有效积分倍数</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><b>1 – 9 人</b></td><td>无加成</td><td class="num">× 1.0</td><td>每邀请 1 人首次签到 +20 分，仅此而已。</td></tr>
+        <tr><td><b>10 – 19 人</b></td><td><b>+20%</b></td><td class="num">× 1.2</td><td>全部积分 ×1.2，含此前已攒的签到与邀请积分。</td></tr>
+        <tr><td><b>20 – 49 人</b></td><td><b>+30%</b></td><td class="num">× 1.3</td><td>全部积分 ×1.3，追溯生效。</td></tr>
+        <tr><td><b>50 人以上</b></td><td><b>+50%</b></td><td class="num">× 1.5</td><td>全部积分 ×1.5，最高档。</td></tr>
+      </tbody>
+    </table>
+    <p class="tbl-note">加成只看邀请人自己的邀请人数，按其全部积分计算；被邀请人的积分不因邀请人的档位变化。档位以链上记录的成功邀请人数为准。</p>
+
+    <div class="examples">
+      <div class="example">
+        <span class="ex-tag">示例一 · 邀请 10 人，进 +20% 档</span>
+        <p>签到 22 天得 220 分，邀请 10 人得 10 × 20 = 200 分，基础积分合计 420 分。达到 10 人档后，全部积分 +20%：</p>
+        <div class="ex-result">420 × 1.2 = <span class="mono">504 分</span>有效积分</div>
+      </div>
+      <div class="example">
+        <span class="ex-tag">示例二 · 邀请 50 人，进 +50% 档</span>
+        <p>签到 22 天得 220 分，邀请 50 人得 50 × 20 = 1,000 分，基础积分合计 1,220 分。达到 50 人档后，全部积分 +50%：</p>
+        <div class="ex-result">1,220 × 1.5 = <span class="mono">1,830 分</span>有效积分</div>
+      </div>
+    </div>
+
+    <div class="invite-rules">
+      <div class="card">
+        <h3>每个被邀请人只算一次</h3>
+        <p>邀请奖励只在被邀请人<b>第一次</b>签到时产生，同一个被邀请人之后每天再签到，都不会再给邀请人加分。换个链接、换个入口重复算也不行，以链上首次签到记录为准。</p>
+      </div>
+      <div class="card">
+        <h3>邀请人资格</h3>
+        <p>邀请人必须是<b>持有 Agent ID</b>、且<b>自己已经签到过</b>的人。还没签过到就发邀请链接，邀请奖励不计；先完成自己的第一次签到，再去邀请别人。</p>
+      </div>
+      <div class="card">
+        <h3>不能自邀</h3>
+        <p>用自己的地址邀请自己不算数，也不要用多个地址互相邀请刷分。Agent ID 一人一个、不可转让，自邀和刷量一经认定，相关邀请积分作废，处理口径与上方资格红线一致。</p>
+      </div>
+      <div class="card">
+        <h3>分奖金按有效积分</h3>
+        <p>若项目获奖，用户池按<b>有效积分（加成后）</b>的比例分配：你的份额 = 用户池 ×（你的有效积分 ÷ 全网有效积分总和）。下方计算器也是按有效积分测算的。</p>
+      </div>
+    </div>
+
+    <div class="refgen">
+      <h3>生成我的邀请链接</h3>
+      <p class="rg-sub">填入你的 Agent 钱包地址或 Agent ID（比如 <span class="mono">trump.ai</span>），生成带 <span class="mono">?ref=</span> 的专属链接。对方通过这个链接进来并完成首次签到，邀请奖励记在你名下。</p>
+      <div class="refgen-row">
+        <input type="text" id="ref-input" placeholder="输入 Agent 钱包地址（0x…）或 Agent ID（如 trump.ai）" autocomplete="off" spellcheck="false" />
+        <button class="btn btn-primary" id="btn-refgen" type="button">生成邀请链接</button>
+      </div>
+      <div class="ref-out" id="ref-out">
+        <div class="link" id="ref-link"></div>
+        <button class="copy-btn" type="button" id="btn-refcopy" style="margin-left:0">复制链接</button>
+      </div>
+      <div class="msg" id="ref-msg" role="status"></div>
+      <div class="ref-stats">
+        <div class="stat"><div class="k">我的邀请人数（预览）</div><div class="v" id="stat-invites">0</div></div>
+        <div class="stat"><div class="k">我的邀请积分（预览）</div><div class="v" id="stat-invite-points">0 分</div></div>
+      </div>
+      <p class="ref-note">签到合约已部署上链，上面的邀请人数与邀请积分是本页的<b>预览计数</b>，不代表真实邀请记录；<b>一切以链上数据为准</b>，可在 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对签到合约记录。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>怎么运作</h2>
+      <p>三步完成，全程由你自己在钱包里确认交易。本站不代签、不托管资产、不保存你的登录状态，也不会向你索要私钥、助记词或配对码——任何向你索要这些信息的人都不是本站。</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="num">STEP 01</div>
+        <h3>持有 Agent ID</h3>
+        <p>Agent ID 是给 AI Agent 使用的链上身份（.ai 域名），在官方 App 内领取，每人限领一个、不可转让。没有 Agent ID 的地址无法签到。</p>
+      </div>
+      <div class="card">
+        <div class="num">STEP 02</div>
+        <h3>每天签到一次</h3>
+        <p>投稿期内（2026-11-18 至 2026-12-09 08:00 UTC），持有 Agent ID 的地址每天可调用签到合约 1 次，每次 +10 分，满勤共 220 分。签到需要支付少量网络 Gas，由你自行承担。</p>
+      </div>
+      <div class="card">
+        <div class="num">STEP 03</div>
+        <h3>获奖后按积分领</h3>
+        <p>若项目获奖且奖金到账，50% 将注入已部署的分发合约。投稿期内签到过的地址可按「我的有效积分 ÷ 全网有效积分」的比例，在 90 天领取期内自行在钱包里发起领取交易；无人代领，逾期未领不再处理。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>奖金分配规则</h2>
+      <p>分配只在一个前提下发生：本项目在 Agent ID 黑客松中获奖。下面所有数字都是按规则做的示例测算，用来说明计算方式，不是金额承诺。</p>
+    </div>
+    <div class="splitbar" aria-label="奖金分配比例">
+      <div class="half a">50% · 签到用户池<br /><span style="font-weight:500;font-size:13px">按积分比例分配</span></div>
+      <div class="half b">50% · 项目方<br /><span style="font-weight:500;font-size:13px">开发与运营</span></div>
+    </div>
+    <div class="split-legend">
+      <div class="card">
+        <h3>用户池怎么分</h3>
+        <p>个人可领金额 = 用户池总额 ×（你的<b>有效积分</b> ÷ 全部有效积分）。有效积分 = 基础积分（签到 + 邀请）按你的邀请档位加成后的积分，档位规则见上方「邀请奖励」。只有投稿期内的签到计入；同一人多地址、批量注册等违规行为一经主办方或项目方认定，相关积分作废。</p>
+      </div>
+      <div class="card">
+        <h3>时间线</h3>
+        <p>主办方在公示期结束后 14 个工作日内把奖金发到项目方提交的收款地址。奖金实际到账后，项目方把用户池份额注入已部署的分发合约并在本页公布领取开启时间；领取期为 <b>90 天</b>，期内由用户自行发起领取，逾期未领不再处理。</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>示例情形（非承诺）</th><th class="num">假设奖金</th><th class="num">用户池 50%</th><th class="num">满勤 220 分者示例*</th></tr></thead>
+      <tbody>
+        <tr><td>名次靠前的大奖</td><td class="num">10,000 USDC</td><td class="num">5,000 USDC</td><td class="num">约 75.8 USDC</td></tr>
+        <tr><td>中等名次</td><td class="num">2,000 USDC</td><td class="num">1,000 USDC</td><td class="num">约 15.2 USDC</td></tr>
+        <tr><td>靠后名次</td><td class="num">800 USDC</td><td class="num">400 USDC</td><td class="num">约 6.1 USDC</td></tr>
+        <tr><td>未获奖</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+      </tbody>
+    </table>
+    <p class="tbl-note">* 满勤示例按「全网共 300 个地址、有效积分总和 14,500 分」假设测算，满勤者未邀请他人、无档位加成，有效积分即 220 分：5,000 × 220 ÷ 14,500 ≈ 75.8。参与人数越多，每分摊到的越少；人数越少则越多。实际奖金档位、名次与金额以主办方最终公布为准。</p>
+
+    <div class="calc">
+      <h3 style="margin:0 0 4px;font-size:18px">自己算一算（测算工具）</h3>
+      <p style="margin:0 0 16px;font-size:14px;color:var(--muted)">拖动或填写下面的数字，看看在不同假设下你的份额是多少。结果只取决于你填的假设，不代表实际获奖情况。份额按<b>有效积分（档位加成后）</b>计算：填你的签到天数和邀请人数，工具会自动算出基础积分、所在档位和有效积分；「全网总积分」请填全网<b>有效积分</b>总和的假设值。</p>
+      <div class="calc-grid">
+        <div class="field">
+          <label for="calc-prize">假设奖金总额（USDC）</label>
+          <input type="number" id="calc-prize" value="10000" min="0" step="100" />
+        </div>
+        <div class="field">
+          <label for="calc-total">假设全网有效积分总和</label>
+          <input type="number" id="calc-total" value="14500" min="1" step="100" />
+        </div>
+        <div class="field">
+          <label for="calc-days">我的签到天数（每天 10 分）</label>
+          <input type="number" id="calc-days" value="22" min="0" max="22" step="1" />
+          <input type="range" id="calc-days-range" value="22" min="0" max="22" step="1" />
+        </div>
+        <div class="field">
+          <label for="calc-invites">我邀请的人数（每人 +20 分）</label>
+          <input type="number" id="calc-invites" value="0" min="0" max="500" step="1" />
+          <input type="range" id="calc-invites-range" value="0" min="0" max="100" step="1" />
+        </div>
+      </div>
+      <div class="calc-out">
+        <div class="o"><div class="k">我的基础积分（签到 + 邀请）</div><div class="v" id="calc-base">220 分</div></div>
+        <div class="o"><div class="k">我的档位加成</div><div class="v" id="calc-tier">无加成 · ×1.0</div></div>
+        <div class="o"><div class="k">我的有效积分（加成后）</div><div class="v" id="calc-effective">220 分</div></div>
+      </div>
+      <div class="calc-out">
+        <div class="o"><div class="k">用户池（奖金的 50%）</div><div class="v" id="calc-pool">5,000 USDC</div></div>
+        <div class="o alt"><div class="k">按此假设，我可领约</div><div class="v" id="calc-share">75.86 USDC</div></div>
+        <div class="o"><div class="k">我的有效积分占比</div><div class="v" id="calc-ratio">1.52%</div></div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section>
+    <div class="sec-head">
+      <h2>积分榜</h2>
+      <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 部署后读取的链上快照；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+    </div>
+    <div class="lb-stats">
+      <div class="stat"><div class="k">全网签到人数（totalCheckers）</div><div class="v">1</div></div>
+      <div class="stat"><div class="k">全网总积分（totalPoints）</div><div class="v">10 分</div></div>
+      <div class="stat"><div class="k">创新奖门槛进度</div><div class="v">1 / 30 个地址</div></div>
+    </div>
+    <table id="lb-table">
+      <thead><tr><th>排名</th><th>签到者</th><th class="num">签到天数</th><th class="num">积分</th></tr></thead>
+      <tbody id="lb-body">
+        <tr><td>1</td><td>首位签到者（项目部署者）</td><td class="num">1</td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <p class="tbl-note">快照说明：合约部署后，部署者已完成首次签到（1 天、10 分），故 totalCheckers = 1、totalPoints = 10。新签到会持续累积，本页快照不自动刷新，实时排名以链上记录为准。</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Agent ID 说明与合约配置</h2>
+      <p>签到资格只看一件事：你的地址在 Agent ID 合约里的 <span class="mono">balanceOf</span> 是否大于 0。不查你的其他资产，不读取与签到无关的信息。</p>
+    </div>
+    <div class="two">
+      <div class="kv">
+        <h3>什么是 Agent ID</h3>
+        <ul>
+          <li>给 AI Agent 使用的链上身份凭证，形式为一个 <b>.ai 域名</b>，绑定在你的钱包地址上。</li>
+          <li>在官方 App 内领取：钱包首页的 Agent ID 入口按指引操作即可，每人限领 <b>一个</b>。</li>
+          <li><b>不可转让</b>：无法买卖或转给他人，换地址等于换身份，签到积分跟随持有地址。</li>
+          <li>本项目用它做签到门禁：一人一 ID，天然限制批量小号刷积分。</li>
+          <li>领取或使用中遇到要你交出私钥、助记词的页面，立即关闭——官方流程不会索要这些。</li>
+        </ul>
+      </div>
+      <div class="kv">
+        <h3>合约配置（已部署 · BSC 主网）</h3>
+        <div class="contract-row">
+          <div><div class="name">网络</div><div class="desc">所有交互都在此链上</div></div>
+          <div class="val">BSC 主网 · Chain ID 56</div>
+        </div>
+        <div class="contract-row">
+          <div><div class="name">Agent ID 合约</div><div class="desc">用 balanceOf 判断是否持有</div></div>
+          <div class="val"><span class="mono" id="cfg-agent">0x60b9262456de011f7d15a54cdd8c48baaa8b022f</span><button class="copy-btn" type="button" data-copy="0x60b9262456de011f7d15a54cdd8c48baaa8b022f">复制</button></div>
+        </div>
+        <div class="contract-row">
+          <div><div class="name">签到合约</div><div class="desc">每日签到与积分记录 · <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">在 BscScan 查看</a></div></div>
+          <div class="val"><span class="mono" id="cfg-checkin">0x423D4cce9A6B428f92dD974cC0bF490F24ceD824</span><button class="copy-btn" type="button" data-copy="0x423D4cce9A6B428f92dD974cC0bF490F24ceD824">复制</button></div>
+        </div>
+        <div class="contract-row">
+          <div><div class="name">奖金分发合约</div><div class="desc">获奖后注入用户池、用户自行领取 · <a href="https://bscscan.com/address/0x95A44489A5D0a14dE23E112652412c4535c8c46b" target="_blank" rel="noopener">在 BscScan 查看</a></div></div>
+          <div class="val"><span class="mono" id="cfg-dist">0x95A44489A5D0a14dE23E112652412c4535c8c46b</span><button class="copy-btn" type="button" data-copy="0x95A44489A5D0a14dE23E112652412c4535c8c46b">复制</button></div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin:12px 0 0">两个合约均已部署在 BSC 主网，地址如上，可点链接到 BscScan 核对。除本页公布的地址外，任何声称是本站签到或领奖的合约都不要交互。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>风险提示与规则</h2></div>
+    <div class="risk">
+      <h3>参与前请先读完</h3>
+      <ul>
+        <li><b>获奖不确定：</b>本项目正在参加 Agent ID 黑客松，能否获奖、获得第几名由主办方决定。未获奖时没有任何奖金可分，签到积分随之没有对应分配。</li>
+        <li><b>金额不确定：</b>即使获奖，可领金额还取决于奖金档位、参与总人数与总积分，人多时每人金额会明显变小（见上方示例）。页面上的示例数字均为假设测算。</li>
+        <li><b>积分不是资产：</b>积分只用于计算分配比例，不能转让、不能交易、没有价格，也不能在投稿期外使用。</li>
+        <li><b>Gas 自担：</b>签到和领取都是链上交易，需要你自己支付网络 Gas；交易一旦上链不可撤销，请在钱包弹窗里核对合约地址与金额后再确认。</li>
+        <li><b>防冒充：</b>本站不会私信你、不会建群收费、不会让你把币转到任何“登记地址”。只认本页公布的合约地址，其余均为冒充。</li>
+        <li><b>资格红线：</b>批量注册、多地址刷量等行为违反主办方规则，可能导致项目被取消资格、所有人积分作废，请勿尝试。</li>
+      </ul>
+    </div>
+
+    <details open>
+      <summary>签到必须用币安 Agent 钱包吗？普通钱包为什么签不了？</summary>
+      <p>是的，必须用<b>持有 Agent ID 的那个地址</b>签到，而 Agent ID 是领在币安 Agent 钱包地址上的，所以要用币安 Agent 钱包那个地址来签。签到合约会检查你地址在 Agent ID 合约里的 <span class="mono">balanceOf</span>：普通钱包地址里没有 Agent ID，<span class="mono">balanceOf</span> 为 0，合约会直接拒绝，交易失败——这不是网站坏了，是资格不满足。</p>
+      <p>请注意：<b>不要在任何网站上扫码登录 Agent 钱包，也不要输入配对码</b>，本站不会让你这样做。正确的签到方式只有两种：<b>1）</b>在币安 App 内置浏览器里打开本网站，用持有 Agent ID 的钱包连接签到；<b>2）</b>通过你自己的 AI 代理，从你的 Agent 钱包地址调用签到合约，再由你在币安 App 里确认交易。</p>
+    </details>
+    <details>
+      <summary>签到积分具体怎么算？</summary>
+      <p>以 UTC 日期为界，每天成功签到 1 次得 10 分，每天上限 10 分。投稿期为 2026-11-18 00:00 UTC 至 2026-12-09 08:00 UTC，共 22 个可签到日期，满勤 220 分。邀请他人首次签到，每邀请 1 人 +20 分；邀请满 10 人起，你的全部积分按档位加成（10–19 人 +20%、20–49 人 +30%、50 人以上 +50%，追溯生效），加成后为有效积分，分奖金按有效积分算。投稿期外的签到（若合约保留该功能）不计入本次分配。</p>
+    </details>
+    <details>
+      <summary>没获奖的话，我的积分怎么办？</summary>
+      <p>没有获奖就没有奖金池，积分不产生分配，会在本页明确公告结果。签到记录仍可在链上查询，但积分本身不能兑换任何东西。</p>
+    </details>
+    <details>
+      <summary>奖金什么时候能领、怎么领？</summary>
+      <p>顺序是：主办方公布结果 → 奖金在公示期结束后 14 个工作日内发到项目方收款地址 → 项目方把其中 50% 注入已部署的分发合约并在本页公布领取开启时间 → 你使用投稿期内签到过的同一地址，在 90 天领取期内自行发起领取，逾期未领不再处理。整个过程没有人工转账，也不需要你提供任何账户信息。</p>
+    </details>
+    <details>
+      <summary>我换了钱包地址，积分能合并吗？</summary>
+      <p>不能。Agent ID 不可转让，积分绑定签到时使用的地址。领取时必须使用投稿期内签到过的同一地址，请妥善保管该钱包。</p>
+    </details>
+    <details>
+      <summary>这个网站会保存我的什么信息？</summary>
+      <p>不会。本站是静态页面：不设账户、不保存登录状态、不收集私钥或助记词。你的签到记录只存在于链上合约里，页面只是读取并展示它。</p>
+    </details>
+  </section>
+
+  <footer>
+    <p><b>AgentCheck Daily</b> · Agent ID 每日签到 — 独立开发的黑客松参赛项目，与任何官方机构无关，不使用官方名称或标识。</p>
+    <p>有效签到期：2026-11-18 — 2026-12-09 08:00 UTC · 网络：BSC（56）· Agent ID 合约：<span class="mono">0x60b9262456de011f7d15a54cdd8c48baaa8b022f</span></p>
+    <p>本页内容为项目规则说明，不构成任何收益承诺或投资建议。参与前请自行评估风险。</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ============ 配置：合约部署后只需改这里 ============ */
+  var CONFIG = {
+    chainId: 56,
+    chainHex: "0x38",
+    agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+    checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
+    distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
+    chainSnapshot: { totalCheckers: 1, totalPoints: 10 }, // 2026-11-23 部署后链上快照
+    pointsPerDay: 10,
+    periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
+    periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
+  };
+
+  var state = {
+    account: null,
+    chainOk: false,
+    hasAgentId: null,   // null=未检查
+    checkedToday: false,
+    points: 0,
+    days: 0,
+    previewDays: {}     // 预览模式本地记录 { 'YYYY-MM-DD': true }
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function utcDateStr(ts){
+    var d = new Date(ts);
+    return d.getUTCFullYear() + "-" + String(d.getUTCMonth()+1).padStart(2,"0") + "-" + String(d.getUTCDate()).padStart(2,"0");
+  }
+  function inPeriod(){
+    var now = Date.now();
+    return now >= CONFIG.periodStartUTC && now < CONFIG.periodEndUTC;
+  }
+  function shortAddr(a){ return a ? a.slice(0,6) + "…" + a.slice(-4) : ""; }
+
+  /* ============ 倒计时 ============ */
+  function tick(){
+    var left = CONFIG.periodEndUTC - Date.now();
+    if (left < 0) left = 0;
+    var s = Math.floor(left/1000);
+    $("cd-d").textContent = Math.floor(s/86400);
+    $("cd-h").textContent = String(Math.floor(s%86400/3600)).padStart(2,"0");
+    $("cd-m").textContent = String(Math.floor(s%3600/60)).padStart(2,"0");
+    $("cd-s").textContent = String(s%60).padStart(2,"0");
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ============ 签到日历 ============ */
+  function renderCal(){
+    var cal = $("cal"); cal.innerHTML = "";
+    var todayStr = utcDateStr(Date.now());
+    for (var t = CONFIG.periodStartUTC; t < Date.UTC(2026,11,9,0,0,0) + 86400000; t += 86400000){
+      var ds = utcDateStr(t);
+      var d = new Date(t);
+      var cell = document.createElement("div");
+      cell.className = "d";
+      if (ds === todayStr) cell.className += " today";
+      if (t < Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())) cell.className += " past";
+      if (state.previewDays[ds]) cell.className += " done";
+      cell.innerHTML = "<span class='dn'>" + d.getUTCDate() + "</span>" + (d.getUTCMonth()+1) + "月";
+      cell.title = ds + " (UTC)";
+      cal.appendChild(cell);
+    }
+  }
+  renderCal();
+
+  /* ============ 消息 ============ */
+  function showMsg(text, kind){
+    var m = $("console-msg");
+    m.textContent = text;
+    m.className = "msg show " + (kind || "info");
+  }
+  function hideMsg(){ $("console-msg").className = "msg"; }
+
+  /* ============ 状态渲染 ============ */
+  function setLi(id, mode){
+    var li = $(id);
+    li.classList.remove("done","fail");
+    if (mode) li.classList.add(mode);
+  }
+  function render(){
+    var preview = $("preview-mode").checked;
+    // 统计：本页不在网页上登录钱包，正式积分以链上记录为准；预览模式只显示本地模拟值
+    $("stat-points").textContent = preview ? state.points + "（预览）" : "—";
+    $("stat-days").textContent = preview ? state.days : "—";
+    $("stat-today").innerHTML = state.checkedToday
+      ? "<span class='badge badge-ok'>已签到</span>"
+      : "<span class='badge badge-wait'>待签到</span>";
+    if (state.hasAgentId === true) $("stat-agent").innerHTML = "<span class='badge badge-ok'>持有</span>";
+    else if (state.hasAgentId === false) $("stat-agent").innerHTML = "<span class='badge badge-no'>未持有</span>";
+    else $("stat-agent").innerHTML = "<span class='badge badge-wait'>未检查</span>";
+    // 清单
+    setLi("ck-wallet", "");
+    setLi("ck-agent", state.hasAgentId ? "done" : (state.hasAgentId === false ? "fail" : ""));
+    setLi("ck-period", inPeriod() ? "done" : "fail");
+    setLi("ck-today", state.checkedToday ? "done" : "");
+    // 按钮
+    var btn = $("btn-checkin");
+    if (!inPeriod()){ btn.disabled = true; btn.textContent = "不在投稿期内"; }
+    else if (state.checkedToday){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
+    else if (preview){ btn.disabled = false; btn.textContent = "预览签到 +10 分（不上链）"; }
+    else { btn.disabled = true; btn.textContent = "请按上方钱包连接说明签到"; }
+  }
+
+  /* ============ 签到 ============ */
+  $("btn-checkin").addEventListener("click", function(){
+    var preview = $("preview-mode").checked;
+    if (preview){
+      // 本地预览：只改本页内存状态，不发交易
+      var ds = utcDateStr(Date.now());
+      if (state.previewDays[ds]){ showMsg("今天已经在预览中签到过了。", "warn"); return; }
+      state.previewDays[ds] = true;
+      state.checkedToday = true;
+      state.points += CONFIG.pointsPerDay;
+      state.days += 1;
+      renderCal(); render();
+      showMsg("预览签到完成：+10 分（本地模拟，未上链、不计入正式积分）。正式签到请按上方钱包连接说明，在币安 App 内打开本站或通过自己的 AI 代理调用签到合约完成。", "info");
+      return;
+    }
+    // 正式签到不在本页发起：请按上方钱包连接说明，在币安 App 内打开本站签到，或通过自己的 AI 代理从 Agent 钱包地址调用签到合约并在 App 里确认。
+    showMsg("正式签到请按上方钱包连接说明操作：不要在网站上扫码登录 Agent 钱包、不要输配对码；请在币安 App 内打开本站，或通过自己的 AI 代理从 Agent 钱包地址调用签到合约。", "info");
+  });
+
+  $("preview-mode").addEventListener("change", function(){
+    if (!this.checked){
+      state.previewDays = {}; state.points = 0; state.days = 0; state.checkedToday = false;
+      renderCal();
+      showMsg("已退出预览模式，本地模拟记录已清空。", "info");
+    } else {
+      showMsg("已进入界面预览模式：签到只在本地模拟，不上链、不产生有效积分。", "warn");
+    }
+    render();
+  });
+
+  /* ============ 复制 ============ */
+  function copyText(text, btn, doneLabel, idleLabel){
+    function ok(){
+      btn.textContent = doneLabel;
+      setTimeout(function(){ btn.textContent = idleLabel; }, 1600);
+    }
+    function fail(){
+      btn.textContent = "复制失败，请手动复制";
+      setTimeout(function(){ btn.textContent = idleLabel; }, 2400);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok, function(){
+        fallbackCopy(text) ? ok() : fail();
+      });
+    } else {
+      fallbackCopy(text) ? ok() : fail();
+    }
+  }
+  function fallbackCopy(text){
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var done = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return !!done;
+    } catch (e) { return false; }
+  }
+  document.querySelectorAll("[data-copy]").forEach(function(b){
+    b.addEventListener("click", function(){
+      copyText(b.getAttribute("data-copy"), b, "已复制", "复制");
+    });
+  });
+
+  /* ============ 测算器 ============ */
+  function fmt(n){
+    return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  }
+  function tierOf(invites){
+    if (invites >= 50) return { mult: 1.5, label: "+50% · ×1.5（50 人以上档）" };
+    if (invites >= 20) return { mult: 1.3, label: "+30% · ×1.3（20–49 人档）" };
+    if (invites >= 10) return { mult: 1.2, label: "+20% · ×1.2（10–19 人档）" };
+    return { mult: 1.0, label: "无加成 · ×1.0（未满 10 人）" };
+  }
+  function calc(){
+    var prize = parseFloat($("calc-prize").value) || 0;
+    var total = parseFloat($("calc-total").value) || 0;
+    var days = Math.max(0, parseFloat($("calc-days").value) || 0);
+    var invites = Math.max(0, parseFloat($("calc-invites").value) || 0);
+    var base = days * 10 + invites * 20;
+    var tier = tierOf(invites);
+    var effective = Math.round(base * tier.mult);
+    var pool = prize * 0.5;
+    var share = total > 0 ? pool * effective / total : 0;
+    var ratio = total > 0 ? effective / total * 100 : 0;
+    $("calc-base").textContent = fmt(base) + " 分";
+    $("calc-tier").textContent = tier.label;
+    $("calc-effective").textContent = fmt(effective) + " 分";
+    $("calc-pool").textContent = fmt(pool) + " USDC";
+    $("calc-share").textContent = fmt(share) + " USDC";
+    $("calc-ratio").textContent = ratio.toFixed(2) + "%";
+  }
+  ["calc-prize","calc-total","calc-days","calc-invites"].forEach(function(id){
+    $(id).addEventListener("input", function(){
+      if (id === "calc-days") $("calc-days-range").value = $("calc-days").value;
+      if (id === "calc-invites") $("calc-invites-range").value = Math.min(100, parseFloat($("calc-invites").value) || 0);
+      calc();
+    });
+  });
+  $("calc-days-range").addEventListener("input", function(){
+    $("calc-days").value = this.value; calc();
+  });
+  $("calc-invites-range").addEventListener("input", function(){
+    $("calc-invites").value = this.value; calc();
+  });
+  calc();
+
+  /* ============ 邀请链接生成器 ============ */
+  var refLink = "";
+  function showRefMsg(text, kind){
+    var m = $("ref-msg");
+    m.textContent = text;
+    m.className = "msg show " + (kind || "info");
+  }
+  $("btn-refgen").addEventListener("click", function(){
+    var v = $("ref-input").value.trim();
+    if (!v){
+      refLink = "";
+      $("ref-out").classList.remove("show");
+      showRefMsg("请先填入你的 Agent 钱包地址或 Agent ID（比如 trump.ai）。", "warn");
+      return;
+    }
+    var a = document.createElement("a");
+    a.href = "?ref=" + encodeURIComponent(v);
+    refLink = a.href;
+    $("ref-link").textContent = refLink;
+    $("ref-out").classList.add("show");
+    showRefMsg("邀请链接已生成，发给持有 Agent ID 的朋友；对方完成首次签到后，邀请奖励记在你名下。", "info");
+  });
+  $("ref-input").addEventListener("keydown", function(e){
+    if (e.key === "Enter"){ e.preventDefault(); $("btn-refgen").click(); }
+  });
+  $("btn-refcopy").addEventListener("click", function(){
+    if (!refLink) return;
+    copyText(refLink, this, "已复制", "复制链接");
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
