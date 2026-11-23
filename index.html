@@ -3,15 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light dark" />
+<meta name="color-scheme" content="dark" />
 <script>
-  /* 主题初始化：在页面绘制前读出上次手动选择，避免切换时闪白。无记录则不设属性，跟随系统偏好。 */
-  try {
-    var savedTheme = localStorage.getItem("agentcheck-theme");
-    if (savedTheme === "dark" || savedTheme === "light") {
-      document.documentElement.setAttribute("data-theme", savedTheme);
-    }
-  } catch (e) {}
+  /* 全站固定黑夜模式，无主题切换。 */
   document.documentElement.classList.add("js-anim");
 </script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='14.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='28.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='%23171106'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='none' stroke='%23c9901d' stroke-width='2.3'/%3E%3Cpath d='M7 20.5v-1.7c0-4.6 3.7-8.3 8.3-8.3h17.4c4.6 0 8.3 3.7 8.3 8.3v1.7z' fill='%23c9901d'/%3E%3Cpath d='M16.6 31.4l5.4 5.4 9.6-10.6' fill='none' stroke='%23c9901d' stroke-width='4.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -20,58 +14,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
+  /* 全站固定黑夜模式：深色鎏金配色为唯一配色，不随系统偏好或手动切换改变 */
   :root{
-    --bg:#f6f3ec; --bg-deep:#efe9da;
-    --surface:#fffefa; --surface2:#faf6ec; --surface3:#f0e9d8;
-    --ink:#16120a; --ink2:#494231; --muted:#847a63;
-    --line:#e3dbc6; --line2:#cabd97;
-    --gold:#a3740c; --gold-bright:#cf9817; --gold-deep:#845e08;
-    --gold-soft:#f9efd2; --gold-line:#e4cb87; --gold-ink:#715108;
-    --ok:#0a7a5c; --ok-soft:#ddf0e7; --ok-ink:#074c39;
-    --danger:#b3352b; --danger-soft:#fdecea;
-    --warn-bg:#fbf3da; --warn-line:#e6cd85; --warn-ink:#6d5310;
-    --shadow-lg:0 32px 64px -28px rgba(52,38,6,.30), 0 6px 20px rgba(52,38,6,.07);
-    --shadow-sm:0 2px 12px rgba(52,38,6,.05), 0 1px 3px rgba(52,38,6,.05);
-    --glow:0 22px 44px -18px rgba(163,116,12,.38), 0 0 0 1px rgba(207,152,23,.28), 0 0 34px -6px rgba(207,152,23,.30);
-    --radius:20px; --radius-lg:28px;
-    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    --sans:"Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-    --serif:"Noto Serif SC", "Songti SC", "STSong", serif;
-    --ease:cubic-bezier(.22,.61,.36,1);
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0a0906; --bg-deep:#060503;
-      --surface:#14110a; --surface2:#1a160d; --surface3:#231d10;
-      --ink:#f5f0df; --ink2:#cec5a9; --muted:#9d9373;
-      --line:#2b2514; --line2:#483d20;
-      --gold:#eab93e; --gold-bright:#f4cd60; --gold-deep:#cf9817;
-      --gold-soft:#251c09; --gold-line:#58481b; --gold-ink:#f6d67c;
-      --ok:#43c98f; --ok-soft:#0f241a; --ok-ink:#8fe3bc;
-      --danger:#f08a80; --danger-soft:#331915;
-      --warn-bg:#251c09; --warn-line:#58481b; --warn-ink:#f0d48a;
-      --shadow-lg:0 32px 64px -28px rgba(0,0,0,.7), 0 6px 20px rgba(0,0,0,.4);
-      --shadow-sm:0 2px 12px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.3);
-      --glow:0 22px 44px -18px rgba(0,0,0,.65), 0 0 0 1px rgba(234,185,62,.35), 0 0 38px -6px rgba(234,185,62,.35);
-    }
-  }
-  /* 手动主题：data-theme 属性优先于系统偏好 */
-  :root[data-theme="light"]{
-    --bg:#f6f3ec; --bg-deep:#efe9da;
-    --surface:#fffefa; --surface2:#faf6ec; --surface3:#f0e9d8;
-    --ink:#16120a; --ink2:#494231; --muted:#847a63;
-    --line:#e3dbc6; --line2:#cabd97;
-    --gold:#a3740c; --gold-bright:#cf9817; --gold-deep:#845e08;
-    --gold-soft:#f9efd2; --gold-line:#e4cb87; --gold-ink:#715108;
-    --ok:#0a7a5c; --ok-soft:#ddf0e7; --ok-ink:#074c39;
-    --danger:#b3352b; --danger-soft:#fdecea;
-    --warn-bg:#fbf3da; --warn-line:#e6cd85; --warn-ink:#6d5310;
-    --shadow-lg:0 32px 64px -28px rgba(52,38,6,.30), 0 6px 20px rgba(52,38,6,.07);
-    --shadow-sm:0 2px 12px rgba(52,38,6,.05), 0 1px 3px rgba(52,38,6,.05);
-    --glow:0 22px 44px -18px rgba(163,116,12,.38), 0 0 0 1px rgba(207,152,23,.28), 0 0 34px -6px rgba(207,152,23,.30);
-    color-scheme:light;
-  }
-  :root[data-theme="dark"]{
     --bg:#0a0906; --bg-deep:#060503;
     --surface:#14110a; --surface2:#1a160d; --surface3:#231d10;
     --ink:#f5f0df; --ink2:#cec5a9; --muted:#9d9373;
@@ -84,17 +28,19 @@
     --shadow-lg:0 32px 64px -28px rgba(0,0,0,.7), 0 6px 20px rgba(0,0,0,.4);
     --shadow-sm:0 2px 12px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.3);
     --glow:0 22px 44px -18px rgba(0,0,0,.65), 0 0 0 1px rgba(234,185,62,.35), 0 0 38px -6px rgba(234,185,62,.35);
+    --radius:20px; --radius-lg:28px;
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:"Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --serif:"Noto Serif SC", "Songti SC", "STSong", serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
     color-scheme:dark;
   }
-  :root[data-theme="dark"] a{color:var(--gold-bright)}
-  :root[data-theme="light"] a{color:var(--gold-deep)}
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
   ::selection{background:var(--gold);color:#1c1404}
   button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:36px}
-  a{color:var(--gold-deep);text-underline-offset:3px}
-  @media (prefers-color-scheme: dark){ a{color:var(--gold-bright)} }
+  a{color:var(--gold-bright);text-underline-offset:3px}
   a:hover{text-decoration-thickness:2px}
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
   .wrap{max-width:1520px;margin:0 auto;padding:0 48px}
@@ -115,23 +61,23 @@
   .js-anim .reveal.d3{transition-delay:.24s}
 
   /* ---------- top nav ---------- */
-  .topnav{position:sticky;top:0;z-index:50;overflow:hidden;background:linear-gradient(180deg, color-mix(in srgb, var(--surface) 52%, transparent), color-mix(in srgb, var(--bg) 58%, transparent));backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);border-bottom:1px solid color-mix(in srgb, var(--gold-line) 45%, rgba(255,255,255,.30));box-shadow:inset 0 1px 0 rgba(255,255,255,.38), inset 0 -14px 26px -20px rgba(255,255,255,.28), 0 14px 34px -20px rgba(30,20,2,.35)}
-  .topnav::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 32%, rgba(255,255,255,.16) 47%, rgba(255,255,255,.05) 54%, transparent 68%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.4s var(--ease)}
+  .topnav{position:sticky;top:0;z-index:50;overflow:hidden;background:linear-gradient(120deg, rgba(20,14,4,.55), rgba(12,8,2,.34) 55%, rgba(24,16,4,.45));border-bottom:1px solid rgba(255,240,200,.34);box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7)}
+  .topnav::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 30%, rgba(255,244,214,.14) 47%, rgba(255,244,214,.05) 55%, transparent 70%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.5s var(--ease)}
   .topnav:hover::after{background-position:-70% 0}
   .nav-in{display:flex;align-items:center;gap:32px;height:78px}
-  .brand{display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--ink);flex:none}
+  .brand{display:flex;align-items:center;gap:13px;text-decoration:none;color:#fff7e0;flex:none}
   .brand-mark{width:44px;height:44px;flex:none;filter:drop-shadow(0 6px 14px rgba(163,116,12,.35))}
   .brand-name{font-family:var(--serif);font-weight:900;font-size:21px;letter-spacing:.01em;line-height:1}
-  .brand-name em{font-style:normal;color:var(--gold)}
-  .brand-sub{display:block;font-family:var(--sans);font-weight:500;font-size:10.5px;color:var(--muted);letter-spacing:.16em;margin-top:4px}
-  .nav-links{display:flex;gap:6px;margin:0 auto;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:5px}
-  .nav-link{appearance:none;background:transparent;border:0;cursor:pointer;font-family:var(--sans);color:var(--ink2);font-size:14.5px;font-weight:500;padding:8px 18px;border-radius:999px;min-height:38px;transition:color .25s ease, background .25s ease, box-shadow .25s ease}
-  .nav-link:hover{color:var(--ink)}
+  .brand-name em{font-style:normal;color:#f4cd60}
+  .brand-sub{display:block;font-family:var(--sans);font-weight:500;font-size:10.5px;color:#cdbd8b;letter-spacing:.16em;margin-top:4px}
+  .nav-links{display:flex;gap:6px;margin:0 auto;background:rgba(255,248,230,.07);border:1px solid rgba(255,240,200,.22);border-radius:999px;padding:5px;box-shadow:inset 0 1px 0 rgba(255,246,220,.18)}
+  .nav-link{appearance:none;background:transparent;border:0;cursor:pointer;font-family:var(--sans);color:#e8dcb4;font-size:14.5px;font-weight:500;padding:8px 18px;border-radius:999px;min-height:38px;transition:color .25s ease, background .25s ease, box-shadow .25s ease}
+  .nav-link:hover{color:#fff7e0}
   .nav-link.is-active{color:#241a04;font-weight:700;background:linear-gradient(180deg, var(--gold-bright), var(--gold-deep));box-shadow:0 8px 18px -8px rgba(163,116,12,.7), inset 0 1px 0 rgba(255,255,255,.45)}
   .nav-right{display:flex;align-items:center;gap:14px;flex:none}
-  .nav-status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink2)}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 3px var(--ok-soft);animation:dotPulse 2.6s ease-in-out infinite}
-  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px var(--ok-soft)}50%{box-shadow:0 0 0 5px var(--ok-soft)}}
+  .nav-status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#e8dcb4}
+  .dot{width:8px;height:8px;border-radius:50%;background:#43c98f;flex:none;box-shadow:0 0 0 3px rgba(67,201,143,.22);animation:dotPulse 2.6s ease-in-out infinite}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px rgba(67,201,143,.22)}50%{box-shadow:0 0 0 5px rgba(67,201,143,.22)}}
   .btn{appearance:none;border:0;cursor:pointer;font-family:var(--sans);font-weight:700;border-radius:12px;padding:11px 20px;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .18s var(--ease), box-shadow .25s ease, background .15s ease, border-color .15s ease;text-decoration:none}
   .btn:active{transform:translateY(1px)}
   .btn-gold{background:linear-gradient(180deg, var(--gold-bright), var(--gold-deep));color:#221806;box-shadow:0 12px 24px -12px rgba(163,116,12,.7), inset 0 1px 0 rgba(255,255,255,.45)}
@@ -139,17 +85,6 @@
   .btn-sm{padding:9px 18px;font-size:14px;border-radius:999px}
   .btn-big{width:100%;font-size:16.5px;padding:16px 20px;border-radius:14px;margin-top:16px}
   .btn[disabled]{opacity:.48;cursor:not-allowed;transform:none;box-shadow:none}
-  .theme-toggle{appearance:none;width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);background:var(--surface);color:var(--gold);cursor:pointer;transition:border-color .15s ease, transform .12s ease, box-shadow .25s ease}
-  .theme-toggle:hover{border-color:var(--gold);box-shadow:0 0 18px -4px rgba(207,152,23,.5)}
-  .theme-toggle:active{transform:translateY(1px)}
-  .theme-toggle svg{width:19px;height:19px;display:block}
-  .theme-toggle .ic-sun{display:none}
-  :root[data-theme="dark"] .theme-toggle .ic-sun{display:block}
-  :root[data-theme="dark"] .theme-toggle .ic-moon{display:none}
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]) .theme-toggle .ic-sun{display:block}
-    :root:not([data-theme="light"]) .theme-toggle .ic-moon{display:none}
-  }
   .view-tabs{display:none}
 
   /* ---------- hero（主图首屏） ---------- */
@@ -167,7 +102,10 @@
   .hero-inner > .hero-copy > *:nth-child(3){animation-delay:.2s}
   .hero-inner > .hero-copy > *:nth-child(4){animation-delay:.3s}
   @keyframes heroUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-  .hero-meta{display:flex;flex-wrap:wrap;gap:9px;font-size:13px}
+  .hero-meta{display:flex;flex-wrap:nowrap;gap:9px;font-size:13px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .hero-meta::-webkit-scrollbar{display:none}
+  .hero-meta .pill{flex:none;white-space:nowrap}
+  .pill-short{display:none}
   .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:500;color:var(--ink2);box-shadow:var(--shadow-sm)}
   .pill b{color:var(--ink)}
   .hero .pill{background:rgba(16,11,3,.58);border-color:rgba(242,193,78,.38);color:#d9cb9e;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
@@ -181,23 +119,23 @@
   .condbox b{color:#f2c14e}
 
   /* hero 内的倒计时横条：大号数字直接压在主图上，和标题放在一起 */
-  .cd-strip{position:relative;overflow:hidden;margin-top:48px;border:1px solid rgba(255,240,200,.34);border-radius:26px;padding:30px 36px 26px;background:linear-gradient(120deg, rgba(20,14,4,.55), rgba(12,8,2,.34) 55%, rgba(24,16,4,.45));backdrop-filter:blur(22px) saturate(1.65);-webkit-backdrop-filter:blur(22px) saturate(1.65);box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7);animation:heroUp .9s var(--ease) .35s both}
+  .cd-strip{position:relative;overflow:hidden;margin-top:40px;border:1px solid rgba(255,240,200,.34);border-radius:26px;padding:20px 36px 18px;background:linear-gradient(120deg, rgba(20,14,4,.30), rgba(12,8,2,.16) 55%, rgba(24,16,4,.24));box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7);animation:heroUp .9s var(--ease) .35s both}
   .cd-strip::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 30%, rgba(255,244,214,.14) 47%, rgba(255,244,214,.05) 55%, transparent 70%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.5s var(--ease)}
   .cd-strip:hover::after{background-position:-70% 0}
   .cd-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .cd-title h2{margin:0;font-family:var(--serif);font-size:23px;font-weight:900;color:#fff7e0}
   .cd-title span{font-size:13px;color:#cdbd8b}
-  .countdown{display:flex;margin-top:24px}
+  .countdown{display:flex;margin-top:14px}
   .cd-cell{flex:1;text-align:center;padding:2px 4px}
   .cd-cell + .cd-cell{border-left:1px solid rgba(242,193,78,.20)}
   .cd-cell .n{font-family:var(--mono);font-size:clamp(46px,4.8vw,68px);font-weight:600;line-height:1.05;letter-spacing:-.02em;color:#fff7e0;text-shadow:0 3px 22px rgba(0,0,0,.5)}
   .cd-cell .u{font-size:13px;color:#cdbd8b;margin-top:7px;letter-spacing:.28em}
   .cd-cell.sec .n{color:#f4cd60;animation:cdPulse 2s ease-in-out infinite}
   @keyframes cdPulse{0%,100%{text-shadow:0 0 0 rgba(242,193,78,0)}50%{text-shadow:0 0 26px rgba(242,193,78,.65)}}
-  .cd-note{font-size:13.5px;color:#bfb183;margin:18px 0 0;line-height:1.7}
-  .cd-progress{height:8px;border-radius:99px;background:rgba(255,248,230,.16);overflow:hidden;margin-top:24px}
+  .cd-note{font-size:13.5px;color:#bfb183;margin:12px 0 0;line-height:1.7}
+  .cd-progress{height:8px;border-radius:99px;background:rgba(255,248,230,.16);overflow:hidden;margin-top:16px}
   .cd-progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg, #a8740f, #f2c14e);transition:width .6s ease}
-  .cd-progress-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:#bfb183;margin-top:9px}
+  .cd-progress-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:#bfb183;margin-top:7px}
   .cd-progress-row b{font-family:var(--mono);font-weight:600;color:#fff3d0}
 
   /* hero 下方：Agent 签到面板 + 日历 */
@@ -418,10 +356,19 @@
   .foot-brand{display:flex;align-items:center;gap:10px}
   .foot-mark{width:26px;height:26px;flex:none}
 
+  /* 桌面端：首屏主图从玻璃导航栏下透出来（hero 上移一个导航高，内边距等量补回，内容位置不变） */
+  @media (min-width:1181px){
+    .hero-zone{margin-top:-78px}
+    .hero-inner{padding-top:174px}
+  }
+
   /* ---------- responsive ---------- */
   @media (max-width:1180px){
     .nav-links{display:none}
-    .view-tabs{display:block;position:sticky;top:78px;z-index:40;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+    /* 平板端：主图同样垫到玻璃导航下——上移量 = 导航 78px + 视图标签条约 59px（另留 3px 保险重叠），内边距等量补回，内容位置不变 */
+    .hero-zone{margin-top:-140px}
+    .hero-inner{padding-top:236px}
+    .view-tabs{display:block;position:sticky;top:78px;z-index:40;background:linear-gradient(120deg, rgba(20,14,4,.55), rgba(12,8,2,.34) 55%, rgba(24,16,4,.45));border-bottom:1px solid rgba(255,240,200,.34);box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 -18px 30px -22px rgba(255,220,140,.18)}
     .view-tabs-in{display:flex;gap:6px;overflow-x:auto;padding-top:9px;padding-bottom:9px;scrollbar-width:none}
     .view-tabs-in::-webkit-scrollbar{display:none}
     .view-tabs .nav-link{flex:none}
@@ -429,11 +376,11 @@
   }
   @media (max-width:900px){
     .wrap{padding:0 24px}
-    .hero-inner{padding:64px 0 64px}
+    .hero-inner{padding:204px 0 64px}
     .hero-shade{background:linear-gradient(180deg, rgba(7,5,2,.84) 0%, rgba(7,5,2,.60) 55%, rgba(7,5,2,.55) 100%)}
     .hero-bg{object-position:70% 50%}
     .hero-copy{max-width:100%}
-    .cd-strip{padding:24px 22px 20px;margin-top:36px}
+    .cd-strip{padding:18px 22px 14px;margin-top:36px}
     .hero-lower-wrap{padding-top:36px}
     .stats-row{grid-template-columns:1fr 1fr}
     .steps,.two,.split-legend,.invite-rules,.ref-stats,.examples,.lb-stats{grid-template-columns:1fr}
@@ -458,9 +405,15 @@
     .nav-right{gap:10px}
     .nav-right .btn-sm{padding:8px 13px;font-size:13.5px}
     .view-tabs{top:68px}
-    .hero-inner{padding:48px 0 52px}
+    /* 手机端：导航高 68px + 视图标签条约 59px（另留 3px 保险重叠），主图同样垫到玻璃导航下，内边距等量补回 */
+    .hero-zone{margin-top:-130px}
+    .hero-inner{padding:178px 0 52px}
+    .hero-meta{font-size:11px;gap:5px;overflow-x:visible}
+    .hero .pill{padding:4px 8px;gap:4px}
+    .hero-meta .pill-full{display:none}
+    .hero-meta .pill-short{display:inline}
     .hero h1{font-size:42px}
-    .cd-strip{padding:20px 16px 16px}
+    .cd-strip{padding:14px 16px 12px}
     .cd-cell .u{letter-spacing:.14em}
     .cmd-steps li{font-size:15px}
     .agent-cmd{padding:20px 18px}
@@ -515,10 +468,6 @@
       <button type="button" class="nav-link" data-view-btn="more">合约与问答</button>
     </nav>
     <div class="nav-right">
-      <button class="theme-toggle" id="btn-theme" type="button" aria-label="切换深色 / 浅色模式">
-        <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
       <span class="nav-status"><span class="dot"></span>投稿期进行中</span>
       <button class="btn btn-gold btn-sm" type="button" data-goto="checkin">去签到</button>
     </div>
@@ -541,10 +490,10 @@
   <div class="wrap hero-inner">
     <div class="hero-copy">
       <div class="hero-meta">
-        <span class="pill">投稿期 · <b>2026-11-18 — 12-09 08:00 UTC</b></span>
-        <span class="pill">网络 · <b>BSC（Chain ID 56）</b></span>
-        <span class="pill">签到合约 · <b>已部署 · BSC 主网</b></span>
-        <span class="pill">独立参赛项目 · 非官方页面</span>
+        <span class="pill"><span class="pill-full">投稿期 · <b>2026-11-18 — 12-09 08:00 UTC</b></span><span class="pill-short">11-18 至 12-09</span></span>
+        <span class="pill"><span class="pill-full">网络 · <b>BSC（Chain ID 56）</b></span><span class="pill-short">BSC 主网</span></span>
+        <span class="pill"><span class="pill-full">签到合约 · <b>已部署 · BSC 主网</b></span><span class="pill-short">已部署</span></span>
+        <span class="pill"><span class="pill-full">独立参赛项目 · 非官方页面</span><span class="pill-short">非官方</span></span>
       </div>
       <h1>每天签到一次，<br />攒积分，<span class="hl">获奖才分奖</span>。</h1>
       <p class="lede">AgentCheck Daily 是一个面向 <strong>Agent ID（.ai 域名）持有者</strong>的每日签到应用。投稿期内每天可签到 1 次、攒 10 分积分。<strong>若本项目在 Agent ID 黑客松中获奖</strong>，项目方将把奖金的 <strong>50%</strong> 按积分比例分给投稿期内签到过的持有者，另外 50% 留给项目方。</p>
@@ -595,7 +544,7 @@
             <span>全网签到人数 <b>3</b> 人</span>
             <span>全网总积分 <b>30</b> 分</span>
           </span>
-          <span class="snap-note">链上快照（2026-11-23 18:57 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+          <span class="snap-note">链上快照（2026-11-23 19:11 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
         </div>
       </div>
     </div>
@@ -613,49 +562,12 @@
 
 <div class="wrap page">
 
-  <div class="stats-row" data-view="checkin" aria-label="关键数据">
-    <div class="stat-card reveal">
-      <div class="k">全网签到人数</div>
-      <div class="v"><span class="count" data-count="2">2</span><span class="unit">人</span></div>
-      <div class="note">链上快照 · totalCheckers</div>
-    </div>
-    <div class="stat-card reveal d1">
-      <div class="k">全网总积分</div>
-      <div class="v"><span class="count" data-count="20">20</span><span class="unit">分</span></div>
-      <div class="note">链上快照 · totalPoints</div>
-    </div>
-    <div class="stat-card reveal d2">
-      <div class="k">每日签到奖励</div>
-      <div class="v"><span class="count" data-count="10">10</span><span class="unit">分</span></div>
-      <div class="note">满勤 22 天 · 共 220 分</div>
-    </div>
-    <div class="stat-card reveal d3">
-      <div class="k">投稿截止</div>
-      <div class="v">12-09</div>
-      <div class="note">台北时间 16:00（08:00 UTC）</div>
-    </div>
-  </div>
-
   <section id="checkin" data-view="checkin">
     <div class="sec-head reveal">
       <span class="sec-num">01</span>
       <div>
         <h2>签到台</h2>
         <p>签到资格只看签到地址是否持有 Agent ID：签到合约会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断。签到由你自己的 AI 代理调用合约完成，本页只提供指令、指南与公开数据，不直接发起任何交易。</p>
-      </div>
-    </div>
-
-    <div class="guide-card reveal">
-      <div class="wallet-guide" aria-label="怎么用 Agent 完成签到">
-        <h4>怎么用 Agent 完成签到</h4>
-        <ol>
-          <li><strong>前提：</strong>先在币安 App 里领好 Agent ID，Agent 钱包里留一点 BNB 付 gas。</li>
-          <li><strong>复制指令：</strong>复制本页上方的签到指令（通过邀请链接打开本页时，指令会自动带上链接里的邀请人；直接打开则无邀请人）。</li>
-          <li><strong>发给 Agent：</strong>把指令发给自己的 Agent（比如币安 App 里支持 Agentic Wallet 的 Agent）。</li>
-          <li><strong>Agent 先核对：</strong>Agent 会先确认你的地址持有 Agent ID、今天还没签过，然后准备好签到交易。</li>
-          <li><strong>你来确认：</strong>你在币安 App 里自己确认这笔交易，签到完成，当天拿 10 分。第一次签到成功后，让你的 Agent 把你自己的邀请链接发给你（链接就是本站网址加 <span class="mono">?ref=</span> 你的 Agent 钱包地址）；你分享这个链接，别人第一次通过它签到，你拿 20 分。</li>
-        </ol>
-        <p class="wg-foot">签到成功后，可以在本页看链上快照，或到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 查 AgentCheckIn 合约的交易记录确认。另外提醒：<span class="wg-no">不要</span>在任何网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</p>
       </div>
     </div>
 
@@ -839,7 +751,29 @@
       <span class="sec-num">05</span>
       <div>
         <h2>积分榜</h2>
-        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 18:57 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 19:11 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+      </div>
+    </div>
+    <div class="stats-row" data-view="board" aria-label="关键数据">
+      <div class="stat-card reveal">
+        <div class="k">全网签到人数</div>
+        <div class="v"><span class="count" data-count="2">2</span><span class="unit">人</span></div>
+        <div class="note">链上快照 · totalCheckers</div>
+      </div>
+      <div class="stat-card reveal d1">
+        <div class="k">全网总积分</div>
+        <div class="v"><span class="count" data-count="20">20</span><span class="unit">分</span></div>
+        <div class="note">链上快照 · totalPoints</div>
+      </div>
+      <div class="stat-card reveal d2">
+        <div class="k">每日签到奖励</div>
+        <div class="v"><span class="count" data-count="10">10</span><span class="unit">分</span></div>
+        <div class="note">满勤 22 天 · 共 220 分</div>
+      </div>
+      <div class="stat-card reveal d3">
+        <div class="k">投稿截止</div>
+        <div class="v">12-09</div>
+        <div class="note">台北时间 16:00（08:00 UTC）</div>
       </div>
     </div>
     <div class="lb-stats">
@@ -856,7 +790,7 @@
       </tbody>
     </table>
     <p class="tbl-note">排行榜按钱包地址标识签到者，地址前后各显示几位。</p>
-    <p class="tbl-note">快照说明：截至 2026-11-23 18:57，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
+    <p class="tbl-note">快照说明：截至 2026-11-23 19:11，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
   </section>
 
   <section id="contracts" data-view="more">
@@ -962,7 +896,7 @@
     agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
     checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
     distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
-    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 18:57 链上快照
+    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 19:11 链上快照
     pointsPerDay: 10,
     periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
@@ -1246,29 +1180,6 @@
     if (!refLink) return;
     copyText(refLink, this, "已复制", "复制链接");
   });
-
-  /* ============ 深色 / 浅色切换 ============ */
-  function effectiveTheme(){
-    var attr = document.documentElement.getAttribute("data-theme");
-    if (attr === "dark" || attr === "light") return attr;
-    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-  }
-  function syncThemeBtn(){
-    var btn = $("btn-theme");
-    if (!btn) return;
-    btn.setAttribute("aria-label", effectiveTheme() === "dark" ? "切换到浅色模式" : "切换到深色模式");
-  }
-  $("btn-theme").addEventListener("click", function(){
-    var next = effectiveTheme() === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try { localStorage.setItem("agentcheck-theme", next); } catch (e) {}
-    syncThemeBtn();
-  });
-  if (window.matchMedia){
-    var mq = window.matchMedia("(prefers-color-scheme: dark)");
-    if (mq.addEventListener) mq.addEventListener("change", syncThemeBtn);
-  }
-  syncThemeBtn();
 
   /* ============ 滚动淡入上浮 ============ */
   if ("IntersectionObserver" in window && !reduceMotion){
