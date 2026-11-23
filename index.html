@@ -13,7 +13,7 @@
     }
   } catch (e) {}
 </script>
-<link rel="icon" href="data:," />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='14.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='28.6' y='5.4' width='4.8' height='10.5' rx='2.4' fill='%23c9901d'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='%23171106'/%3E%3Crect x='7' y='10.5' width='34' height='32' rx='8.5' fill='none' stroke='%23c9901d' stroke-width='2.3'/%3E%3Cpath d='M7 20.5v-1.7c0-4.6 3.7-8.3 8.3-8.3h17.4c4.6 0 8.3 3.7 8.3 8.3v1.7z' fill='%23c9901d'/%3E%3Cpath d='M16.6 31.4l5.4 5.4 9.6-10.6' fill='none' stroke='%23c9901d' stroke-width='4.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <title>AgentCheck Daily — Agent ID 每日签到</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -429,24 +429,105 @@
     html{scroll-behavior:auto}
     *{transition:none !important}
   }
+
+  /* ---------- v13 应用式视图 + 桌面打磨 + Logo ---------- */
+  .wrap{max-width:1200px;padding:0 32px}
+  [data-view]{display:none}
+  [data-view].view-on{display:block}
+  .stats-row[data-view].view-on{display:grid}
+  .nav-in{height:72px}
+  .brand-mark{width:41px;height:41px;filter:drop-shadow(0 5px 12px rgba(169,116,15,.35))}
+  .brand-name{font-size:20px}
+  .nav-link{appearance:none;background:transparent;border:0;cursor:pointer;font-family:var(--sans);color:var(--ink2);font-size:14.5px;font-weight:500;padding:8px 15px;border-radius:999px;min-height:38px;transition:color .15s ease, background .15s ease, box-shadow .15s ease}
+  .nav-link:hover{color:var(--ink);background:var(--surface3)}
+  .nav-link.is-active{color:#241a04;font-weight:700;background:linear-gradient(180deg, var(--gold-bright), var(--gold-deep));box-shadow:0 8px 18px -8px rgba(169,116,15,.7), inset 0 1px 0 rgba(255,255,255,.4)}
+  .view-tabs{display:none}
+  .hero{grid-template-columns:1.04fr .96fr;gap:48px;align-items:start;padding:54px 0 42px}
+  .hero h1{font-size:clamp(42px,4.6vw,62px);margin:24px 0 18px}
+  .hero-echo{position:absolute;right:-64px;top:16px;width:430px;height:430px;opacity:.055;pointer-events:none}
+  .hero-echo svg{width:100%;height:100%;display:block}
+  .cd-card{margin-top:26px;padding:22px 24px 20px}
+  .cd-cell .n{font-size:28px}
+  .hero .console{margin-top:0;border-color:var(--gold-line)}
+  .console-grid{grid-template-columns:1fr}
+  .console-top{padding:20px 24px 0}
+  .console-col{padding:16px 24px 24px}
+  .console .checklist{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;margin-top:16px}
+  .console .checklist li{padding:7px 0;font-size:13.5px}
+  .console .checklist li:nth-child(2){border-top:0}
+  .cal-strip{margin-bottom:0;padding:22px 26px 18px}
+  .cal .d{padding:7px 2px 6px}
+  .stats-row{margin-top:22px}
+  section{margin-top:52px}
+  .page{padding-bottom:64px}
+  footer{margin-top:48px}
+  .guide-card{margin-top:24px}
+  .guide-card .wallet-guide{padding:22px 26px}
+  .guide-card .wallet-guide ol{display:grid;grid-template-columns:1fr 1fr;gap:2px 32px}
+  .guide-card .wallet-guide li{margin:7px 0}
+  .tier-table{background:transparent;border:1px solid rgba(242,193,78,.25);box-shadow:none;margin-top:26px}
+  .tier-table th,.tier-table td{border-top:1px solid rgba(255,248,230,.12);color:#e8dcb4}
+  .tier-table thead th{background:rgba(255,248,230,.05);color:#b7a678;border-top:0}
+  .tier-table tbody tr:hover{background:rgba(255,248,230,.045)}
+  .tier-table td.num{color:#f2c14e}
+  .tier-table .tt-range{font-weight:900;color:#fff8e6;font-size:16px;white-space:nowrap}
+  .tier-table .tt-mult{font-size:19px;font-weight:600}
+  .tier-table .t-bar{display:block;height:10px;border-radius:99px;background:rgba(255,248,230,.10);overflow:hidden;min-width:110px}
+  .tier-table .t-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg, #a8740f, #f2c14e)}
+  .calc-grid{grid-template-columns:repeat(4,1fr)}
+  .foot-brand{display:flex;align-items:center;gap:9px}
+  .foot-mark{width:24px;height:24px;flex:none}
+  @media (max-width:1020px){
+    .view-tabs{display:block;position:sticky;top:72px;z-index:40;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .view-tabs-in{display:flex;gap:6px;overflow-x:auto;padding-top:8px;padding-bottom:8px;scrollbar-width:none}
+    .view-tabs-in::-webkit-scrollbar{display:none}
+    .view-tabs .nav-link{flex:none}
+  }
+  @media (max-width:900px){
+    .guide-card .wallet-guide ol{grid-template-columns:1fr}
+    .console .checklist{grid-template-columns:1fr}
+    .console .checklist li:nth-child(2){border-top:1px solid var(--line)}
+    .tier-table .tt-bar-h,.tier-table .tt-bar{display:none}
+    .hero-echo{display:none}
+    .calc-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    .view-tabs-in{padding-left:16px;padding-right:16px}
+  }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ac-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2c14e"/>
+      <stop offset=".55" stop-color="#d29a22"/>
+      <stop offset="1" stop-color="#a8740f"/>
+    </linearGradient>
+    <symbol id="ac-logo" viewBox="0 0 48 48">
+      <rect x="14.6" y="5.4" width="4.8" height="10.5" rx="2.4" fill="url(#ac-gold)"/>
+      <rect x="28.6" y="5.4" width="4.8" height="10.5" rx="2.4" fill="url(#ac-gold)"/>
+      <rect x="7" y="10.5" width="34" height="32" rx="8.5" fill="#171106"/>
+      <rect x="7" y="10.5" width="34" height="32" rx="8.5" fill="none" stroke="url(#ac-gold)" stroke-width="2.3"/>
+      <path d="M7 20.5v-1.7c0-4.6 3.7-8.3 8.3-8.3h17.4c4.6 0 8.3 3.7 8.3 8.3v1.7z" fill="url(#ac-gold)"/>
+      <path d="M16.6 31.4l5.4 5.4 9.6-10.6" fill="none" stroke="url(#ac-gold)" stroke-width="4.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
 
 <header class="topnav">
   <div class="wrap nav-in">
-    <a class="brand" href="#top" aria-label="AgentCheck Daily 首页">
-      <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true"><rect x="1.5" y="1.5" width="33" height="33" rx="9" fill="none" stroke="#c9901d" stroke-width="2.4"/><path d="M10.5 18.6l5.4 5.4L25.8 12" fill="none" stroke="#c9901d" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <a class="brand" href="#checkin" data-goto="checkin" aria-label="AgentCheck Daily 首页">
+      <svg class="brand-mark" aria-hidden="true"><use href="#ac-logo"></use></svg>
       <span><span class="brand-name">AgentCheck <em>Daily</em></span><span class="brand-sub">AGENT ID 每日签到</span></span>
     </a>
     <nav class="nav-links" aria-label="页面导航">
-      <a href="#checkin">签到台</a>
-      <a href="#invite">邀请奖励</a>
-      <a href="#rules">奖金规则</a>
-      <a href="#calculator">奖金计算器</a>
-      <a href="#leaderboard">积分榜</a>
-      <a href="#contracts">合约配置</a>
-      <a href="#faq">风险与问答</a>
+      <button type="button" class="nav-link is-active" data-view-btn="checkin">签到</button>
+      <button type="button" class="nav-link" data-view-btn="invite">邀请奖励</button>
+      <button type="button" class="nav-link" data-view-btn="board">排行榜</button>
+      <button type="button" class="nav-link" data-view-btn="rules">奖金规则</button>
+      <button type="button" class="nav-link" data-view-btn="more">合约与问答</button>
     </nav>
     <div class="nav-right">
       <button class="theme-toggle" id="btn-theme" type="button" aria-label="切换深色 / 浅色模式">
@@ -454,12 +535,22 @@
         <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
       <span class="nav-status"><span class="dot"></span>投稿期进行中</span>
-      <a class="btn btn-gold btn-sm" href="#checkin">去签到</a>
+      <button class="btn btn-gold btn-sm" type="button" data-goto="checkin">去签到</button>
     </div>
   </div>
 </header>
+<div class="view-tabs">
+  <div class="wrap view-tabs-in">
+    <button type="button" class="nav-link is-active" data-view-btn="checkin">签到</button>
+    <button type="button" class="nav-link" data-view-btn="invite">邀请奖励</button>
+    <button type="button" class="nav-link" data-view-btn="board">排行榜</button>
+    <button type="button" class="nav-link" data-view-btn="rules">奖金规则</button>
+    <button type="button" class="nav-link" data-view-btn="more">合约与问答</button>
+  </div>
+</div>
 
-<div class="hero-zone" id="top">
+<div class="hero-zone" id="top" data-view="checkin">
+  <div class="hero-echo" aria-hidden="true"><svg><use href="#ac-logo"></use></svg></div>
   <div class="wrap">
     <div class="hero">
       <div>
@@ -474,9 +565,7 @@
         <div class="condbox">
           <b>先说清楚条件：</b>只有获奖才有可分奖金；没有获奖就没有分配。实际金额取决于最终获奖名次与参赛规则，签到本身不产生任何收益，积分也不能兑换、转让或交易。
         </div>
-      </div>
-
-      <div class="cd-card">
+        <div class="cd-card">
         <div class="cd-title">
           <h2>投稿期倒计时</h2>
           <span>截止 12-09 08:00 UTC</span>
@@ -491,78 +580,16 @@
         <div class="cd-progress-row"><span>投稿期进度 · 11-18 开始 — 12-09 截止</span><b id="cd-pct">—</b></div>
         <p class="cd-note">距离投稿期结束（2026-12-09 08:00 UTC，台北时间 12-09 16:00）。结束后签到不再计入积分。</p>
       </div>
-    </div>
-
-    <div class="cal-strip">
-      <div class="cal-head">
-        <h3>投稿期签到日历</h3>
-        <span>共 22 个 UTC 日期 · 11 月 18 日至 12 月 9 日 · 同一地址每天最多签到 1 次</span>
       </div>
-      <div class="cal-wd" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
-      <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
-      <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡；在下方签到台开启预览模式签到后，今天的格子会点亮为金色。</p>
-    </div>
-  </div>
-</div>
 
-<div class="wrap page">
-
-  <div class="stats-row" aria-label="关键数据">
-    <div class="stat-card">
-      <div class="k">全网签到人数</div>
-      <div class="v">1<span class="unit">人</span></div>
-      <div class="note">链上快照 · totalCheckers</div>
-    </div>
-    <div class="stat-card">
-      <div class="k">全网总积分</div>
-      <div class="v">10<span class="unit">分</span></div>
-      <div class="note">链上快照 · totalPoints</div>
-    </div>
-    <div class="stat-card">
-      <div class="k">每日签到奖励</div>
-      <div class="v">10<span class="unit">分</span></div>
-      <div class="note">满勤 22 天 · 共 220 分</div>
-    </div>
-    <div class="stat-card">
-      <div class="k">投稿截止</div>
-      <div class="v">12-09</div>
-      <div class="note">台北时间 16:00（08:00 UTC）</div>
-    </div>
-  </div>
-
-  <section id="checkin">
-    <div class="sec-head">
-      <span class="sec-num">01</span>
-      <div>
-        <h2>签到台</h2>
-        <p>签到资格只看签到地址是否持有 Agent ID：在下方点「连接钱包」、用浏览器钱包插件连接后，页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断，并读出你链上的积分与签到记录。</p>
-      </div>
-    </div>
-
-    <div class="console">
+      
+      <div class="console">
       <div class="console-top">
         <h3>今日签到</h3>
         <span class="console-chip">BSC · Chain ID 56</span>
       </div>
       <div class="console-grid">
-        <div class="console-col">
-          <div class="wallet-guide" aria-label="钱包连接说明">
-            <h4>钱包连接说明</h4>
-            <ol>
-              <li>签到必须用<b>持有 Agent ID 的币安 Agent 钱包地址</b>，普通钱包没 ID 签不了。</li>
-              <li><span class="wg-no">不要</span>在网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</li>
-              <li><strong>在本页连接钱包：</strong>点右侧「连接钱包」，用浏览器已安装的钱包插件（MetaMask、币安钱包插件、Trust Wallet 等）连接；连接与签到都由你在钱包自带弹窗里确认，本站不代签、不保存登录状态。</li>
-              <li><strong>正确签法一：</strong>在币安 App 内置浏览器打开本站签到。</li>
-              <li><strong>正确签法二：</strong>通过自己的 AI 代理从 Agent 钱包地址调签到合约，在 App 里确认。</li>
-            </ol>
-          </div>
-          <ul class="checklist">
-            <li id="ck-wallet"><span class="ck">✓</span><span>签到地址位于 BSC 网络（Chain ID 56）</span></li>
-            <li id="ck-agent"><span class="ck">✓</span><span>该地址持有 Agent ID（balanceOf &gt; 0）</span></li>
-            <li id="ck-period"><span class="ck">✓</span><span>当前在投稿期内（截至 2026-12-09 08:00 UTC）</span></li>
-            <li id="ck-today"><span class="ck">✓</span><span>今天（UTC）尚未签到</span></li>
-          </ul>
-        </div>
+        
         <div class="console-col">
           <div class="wallet-actions">
             <button class="btn btn-gold btn-connect" id="btn-connect" type="button">连接钱包</button>
@@ -587,12 +614,80 @@
           <button class="btn btn-gold btn-big" id="btn-checkin" type="button" disabled>今日签到 +10 分</button>
           <div class="msg" id="console-msg" role="status"></div>
 
+          <ul class="checklist">
+            <li id="ck-wallet"><span class="ck">✓</span><span>签到地址位于 BSC 网络（Chain ID 56）</span></li>
+            <li id="ck-agent"><span class="ck">✓</span><span>该地址持有 Agent ID（balanceOf &gt; 0）</span></li>
+            <li id="ck-period"><span class="ck">✓</span><span>当前在投稿期内（截至 2026-12-09 08:00 UTC）</span></li>
+            <li id="ck-today"><span class="ck">✓</span><span>今天（UTC）尚未签到</span></li>
+          </ul>
           <label class="preview-toggle">
             <input type="checkbox" id="preview-mode" />
             <span><b>界面预览模式</b>：签到合约已部署上链。打开后可在本页本地模拟一次签到流程，<b>不上链、不产生有效积分</b>，刷新页面即清空。正式签到请按上方钱包连接说明操作，以链上记录为准。</span>
           </label>
         </div>
       </div>
+    </div>
+    </div>
+
+    <div class="cal-strip">
+      <div class="cal-head">
+        <h3>投稿期签到日历</h3>
+        <span>共 22 个 UTC 日期 · 11 月 18 日至 12 月 9 日 · 同一地址每天最多签到 1 次</span>
+      </div>
+      <div class="cal-wd" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+      <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
+      <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡；在下方签到台开启预览模式签到后，今天的格子会点亮为金色。</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrap page">
+
+  <div class="stats-row" data-view="checkin" aria-label="关键数据">
+    <div class="stat-card">
+      <div class="k">全网签到人数</div>
+      <div class="v">1<span class="unit">人</span></div>
+      <div class="note">链上快照 · totalCheckers</div>
+    </div>
+    <div class="stat-card">
+      <div class="k">全网总积分</div>
+      <div class="v">10<span class="unit">分</span></div>
+      <div class="note">链上快照 · totalPoints</div>
+    </div>
+    <div class="stat-card">
+      <div class="k">每日签到奖励</div>
+      <div class="v">10<span class="unit">分</span></div>
+      <div class="note">满勤 22 天 · 共 220 分</div>
+    </div>
+    <div class="stat-card">
+      <div class="k">投稿截止</div>
+      <div class="v">12-09</div>
+      <div class="note">台北时间 16:00（08:00 UTC）</div>
+    </div>
+  </div>
+
+  <section id="checkin" data-view="checkin">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <div>
+        <h2>签到台</h2>
+        <p>签到资格只看签到地址是否持有 Agent ID：在下方点「连接钱包」、用浏览器钱包插件连接后，页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断，并读出你链上的积分与签到记录。</p>
+      </div>
+    </div>
+
+    
+
+    <div class="guide-card">
+      <div class="wallet-guide" aria-label="钱包连接说明">
+            <h4>钱包连接说明</h4>
+            <ol>
+              <li>签到必须用<b>持有 Agent ID 的币安 Agent 钱包地址</b>，普通钱包没 ID 签不了。</li>
+              <li><span class="wg-no">不要</span>在网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</li>
+              <li><strong>在本页连接钱包：</strong>点右侧「连接钱包」，用浏览器已安装的钱包插件（MetaMask、币安钱包插件、Trust Wallet 等）连接；连接与签到都由你在钱包自带弹窗里确认，本站不代签、不保存登录状态。</li>
+              <li><strong>正确签法一：</strong>在币安 App 内置浏览器打开本站签到。</li>
+              <li><strong>正确签法二：</strong>通过自己的 AI 代理从 Agent 钱包地址调签到合约，在 App 里确认。</li>
+            </ol>
+          </div>
     </div>
 
     <div class="steps">
@@ -615,7 +710,7 @@
     <p class="tbl-note">三步全程由你自己在钱包里确认交易。本站不代签、不托管资产、不保存你的登录状态，也不会向你索要私钥、助记词或配对码——任何向你索要这些信息的人都不是本站。</p>
   </section>
 
-  <section id="invite">
+  <section id="invite" data-view="invite">
     <div class="invite-panel">
       <div class="sec-head">
         <span class="sec-num">02</span>
@@ -626,28 +721,15 @@
         </div>
       </div>
 
-      <div class="tiers" aria-label="邀请档位加成表">
-        <div class="tier">
-          <div class="t-range">1 – 9 人<span>起步档</span></div>
-          <div class="t-bar"><i style="width:14%"></i></div>
-          <div class="t-mult"><div class="m">× 1.0</div><div class="b">无加成</div></div>
-        </div>
-        <div class="tier">
-          <div class="t-range">10 – 19 人<span>全部积分 ×1.2</span></div>
-          <div class="t-bar"><i style="width:42%"></i></div>
-          <div class="t-mult"><div class="m">× 1.2</div><div class="b">加成 +20%</div></div>
-        </div>
-        <div class="tier">
-          <div class="t-range">20 – 49 人<span>全部积分 ×1.3</span></div>
-          <div class="t-bar"><i style="width:68%"></i></div>
-          <div class="t-mult"><div class="m">× 1.3</div><div class="b">加成 +30%</div></div>
-        </div>
-        <div class="tier">
-          <div class="t-range">50 人以上<span>全部积分 ×1.5 · 最高档</span></div>
-          <div class="t-bar"><i style="width:100%"></i></div>
-          <div class="t-mult"><div class="m">× 1.5</div><div class="b">加成 +50%</div></div>
-        </div>
-      </div>
+      <table class="tier-table" aria-label="邀请档位加成表">
+        <thead><tr><th>邀请人数</th><th>档位</th><th class="tt-bar-h">加成进度</th><th class="num">倍率</th><th class="num">加成幅度</th></tr></thead>
+        <tbody>
+          <tr><td class="tt-range">1 – 9 人</td><td>起步档 · 每邀请 1 人首次签到 +20 分</td><td class="tt-bar"><span class="t-bar"><i style="width:14%"></i></span></td><td class="num tt-mult">× 1.0</td><td class="num">无加成</td></tr>
+          <tr><td class="tt-range">10 – 19 人</td><td>全部积分 ×1.2</td><td class="tt-bar"><span class="t-bar"><i style="width:42%"></i></span></td><td class="num tt-mult">× 1.2</td><td class="num">+20%</td></tr>
+          <tr><td class="tt-range">20 – 49 人</td><td>全部积分 ×1.3</td><td class="tt-bar"><span class="t-bar"><i style="width:68%"></i></span></td><td class="num tt-mult">× 1.3</td><td class="num">+30%</td></tr>
+          <tr><td class="tt-range">50 人以上</td><td>全部积分 ×1.5 · 最高档</td><td class="tt-bar"><span class="t-bar"><i style="width:100%"></i></span></td><td class="num tt-mult">× 1.5</td><td class="num">+50%</td></tr>
+        </tbody>
+      </table>
       <p class="tier-note">各档说明：1 – 9 人，每邀请 1 人首次签到 +20 分，仅此而已；10 – 19 人，全部积分 ×1.2，含此前已攒的签到与邀请积分；20 – 49 人，全部积分 ×1.3，追溯生效；50 人以上，全部积分 ×1.5，最高档。加成只看邀请人自己的邀请人数，按其全部积分计算；被邀请人的积分不因邀请人的档位变化。档位以链上记录的成功邀请人数为准。</p>
 
       <div class="examples">
@@ -705,7 +787,7 @@
     </div>
   </section>
 
-  <section id="rules">
+  <section id="rules" data-view="rules">
     <div class="sec-head">
       <span class="sec-num">03</span>
       <div>
@@ -740,7 +822,7 @@
     <p class="tbl-note">* 满勤示例按「全网共 300 个地址、有效积分总和 14,500 分」假设测算，满勤者未邀请他人、无档位加成，有效积分即 220 分：5,000 × 220 ÷ 14,500 ≈ 75.8。参与人数越多，每分摊到的越少；人数越少则越多。实际奖金档位、名次与金额以主办方最终公布为准。</p>
   </section>
 
-  <section id="calculator">
+  <section id="calculator" data-view="rules">
     <div class="sec-head">
       <span class="sec-num">04</span>
       <div>
@@ -784,7 +866,7 @@
     </div>
   </section>
 
-  <section id="leaderboard">
+  <section id="leaderboard" data-view="board">
     <div class="sec-head">
       <span class="sec-num">05</span>
       <div>
@@ -806,7 +888,7 @@
     <p class="tbl-note">快照说明：合约部署后，部署者已完成首次签到（1 天、10 分），故 totalCheckers = 1、totalPoints = 10。新签到会持续累积，本页快照不自动刷新，实时排名以链上记录为准。</p>
   </section>
 
-  <section id="contracts">
+  <section id="contracts" data-view="more">
     <div class="sec-head">
       <span class="sec-num">06</span>
       <div>
@@ -848,7 +930,7 @@
     </div>
   </section>
 
-  <section id="faq">
+  <section id="faq" data-view="more">
     <div class="sec-head">
       <span class="sec-num">07</span>
       <div><h2>风险提示与规则</h2></div>
@@ -893,7 +975,7 @@
   </section>
 
   <footer>
-    <p><b>AgentCheck Daily</b> · Agent ID 每日签到 — 独立开发的黑客松参赛项目，与任何官方机构无关，不使用官方名称或标识。</p>
+    <p class="foot-brand"><svg class="foot-mark" aria-hidden="true"><use href="#ac-logo"></use></svg><span><b>AgentCheck Daily</b> · Agent ID 每日签到 — 独立开发的黑客松参赛项目，与任何官方机构无关，不使用官方名称或标识。</span></p>
     <p>有效签到期：2026-11-18 — 2026-12-09 08:00 UTC · 网络：BSC（56）· Agent ID 合约：<span class="mono">0x60b9262456de011f7d15a54cdd8c48baaa8b022f</span></p>
     <p>本页内容为项目规则说明，不构成任何收益承诺或投资建议。参与前请自行评估风险。</p>
   </footer>
@@ -1458,6 +1540,35 @@
     if (mq.addEventListener) mq.addEventListener("change", syncThemeBtn);
   }
   syncThemeBtn();
+
+  /* ============ 视图切换（桌面应用式：一次只显示一个视图） ============ */
+  var VIEW_HASH = { checkin: "checkin", invite: "invite", board: "leaderboard", rules: "rules", more: "contracts" };
+  var HASH_VIEW = { checkin: "checkin", invite: "invite", leaderboard: "board", rules: "rules", calculator: "rules", contracts: "more", faq: "more", top: "checkin" };
+  function switchView(name){
+    if (!VIEW_HASH[name]) name = "checkin";
+    document.querySelectorAll("[data-view]").forEach(function(el){
+      el.classList.toggle("view-on", el.getAttribute("data-view") === name);
+    });
+    document.querySelectorAll("[data-view-btn]").forEach(function(b){
+      var on = b.getAttribute("data-view-btn") === name;
+      b.classList.toggle("is-active", on);
+      if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+    window.scrollTo(0, 0);
+    try { history.replaceState(null, "", "#" + VIEW_HASH[name]); } catch (e) {}
+  }
+  document.querySelectorAll("[data-view-btn]").forEach(function(b){
+    b.addEventListener("click", function(){ switchView(b.getAttribute("data-view-btn")); });
+  });
+  document.querySelectorAll("[data-goto]").forEach(function(el){
+    el.addEventListener("click", function(e){ e.preventDefault(); switchView(el.getAttribute("data-goto")); });
+  });
+  var initialView = "checkin";
+  try {
+    var h = (location.hash || "").replace("#", "");
+    if (HASH_VIEW[h]) initialView = HASH_VIEW[h];
+  } catch (e) {}
+  switchView(initialView);
 
   render();
 })();
