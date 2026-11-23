@@ -4,6 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
+<script>
+  /* 主题初始化：在页面绘制前读出上次手动选择，避免切换时闪白。无记录则不设属性，跟随系统偏好。 */
+  try {
+    var savedTheme = localStorage.getItem("agentcheck-theme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+  } catch (e) {}
+</script>
 <link rel="icon" href="data:," />
 <title>AgentCheck Daily — Agent ID 每日签到</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,6 +53,41 @@
       --shadow-sm:0 2px 10px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.3);
     }
   }
+  /* 手动主题：data-theme 属性优先于系统偏好（特异性高于媒体查询里的 :root） */
+  :root[data-theme="light"]{
+    --bg:#f5f2ea; --bg-deep:#efe9db;
+    --surface:#ffffff; --surface2:#fbf8f0; --surface3:#f3eee0;
+    --ink:#1a160e; --ink2:#4c4433; --muted:#7d7360;
+    --line:#e3dac4; --line2:#c9bb97;
+    --gold:#a8740f; --gold-bright:#c9901d; --gold-deep:#8a5f0a;
+    --gold-soft:#faf0d2; --gold-line:#e6cd85; --gold-ink:#77510a;
+    --ok:#0a7a5c; --ok-soft:#e0f1e9; --ok-ink:#084c39;
+    --danger:#b3352b; --danger-soft:#fdecea;
+    --warn-bg:#fbf3da; --warn-line:#e6cd85; --warn-ink:#6d5310;
+    --panel:#171208; --panel2:#211a0d;
+    --shadow-lg:0 28px 56px -20px rgba(46,34,6,.28), 0 4px 16px rgba(46,34,6,.08);
+    --shadow-sm:0 2px 10px rgba(46,34,6,.06), 0 1px 2px rgba(46,34,6,.05);
+    color-scheme:light;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b0a07; --bg-deep:#080706;
+    --surface:#15120c; --surface2:#1a1710; --surface3:#221d13;
+    --ink:#f4efe1; --ink2:#cdc4ab; --muted:#9c9276;
+    --line:#2b2517; --line2:#453a22;
+    --gold:#e6ac3c; --gold-bright:#f2c14e; --gold-deep:#c9901d;
+    --gold-soft:#251c0b; --gold-line:#57471c; --gold-ink:#f5d07a;
+    --ok:#43c98f; --ok-soft:#0f241a; --ok-ink:#8fe3bc;
+    --danger:#f08a80; --danger-soft:#331915;
+    --warn-bg:#251c0b; --warn-line:#57471c; --warn-ink:#f0d48a;
+    --panel:#100d07; --panel2:#171208;
+    --shadow-lg:0 28px 56px -20px rgba(0,0,0,.65), 0 4px 16px rgba(0,0,0,.4);
+    --shadow-sm:0 2px 10px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+  :root[data-theme="dark"] a{color:var(--gold-bright)}
+  :root[data-theme="light"] a{color:var(--gold-deep)}
+  :root[data-theme="dark"] .cal .d.today .dn{color:var(--gold-bright)}
+  :root[data-theme="light"] .cal .d.today .dn{color:var(--gold-deep)}
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -80,6 +124,19 @@
   .btn-ghost:hover{border-color:var(--gold)}
   .btn-big{width:100%;font-size:17px;padding:15px 18px;border-radius:14px;margin-top:16px}
   .btn[disabled]{opacity:.48;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-connect{width:100%;font-size:16px;padding:13px 18px;border-radius:14px}
+  .wallet-note{font-size:12.5px;line-height:1.7;color:var(--muted);margin:10px 0 18px}
+  .theme-toggle{appearance:none;width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);background:var(--surface2);color:var(--gold);cursor:pointer;transition:border-color .15s ease, transform .12s ease}
+  .theme-toggle:hover{border-color:var(--gold)}
+  .theme-toggle:active{transform:translateY(1px)}
+  .theme-toggle svg{width:19px;height:19px;display:block}
+  .theme-toggle .ic-sun{display:none}
+  :root[data-theme="dark"] .theme-toggle .ic-sun{display:block}
+  :root[data-theme="dark"] .theme-toggle .ic-moon{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .theme-toggle .ic-sun{display:block}
+    :root:not([data-theme="light"]) .theme-toggle .ic-moon{display:none}
+  }
 
   /* ---------- hero ---------- */
   .hero-zone{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
@@ -88,7 +145,7 @@
     background:
       radial-gradient(760px 380px at 86% -14%, rgba(201,144,29,.20), transparent 62%),
       radial-gradient(560px 320px at -6% 116%, rgba(201,144,29,.10), transparent 62%)}
-  .hero{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:start;padding:56px 0 54px}
+  .hero{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;padding:56px 0 34px}
   .hero-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:13px}
   .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 13px;font-weight:500;color:var(--ink2);box-shadow:var(--shadow-sm)}
   .pill b{color:var(--ink)}
@@ -110,16 +167,28 @@
   .cd-cell .n{font-family:var(--mono);font-size:32px;font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
   .cd-cell .u{font-size:12px;color:var(--muted);margin-top:3px}
   .cd-note{font-size:13px;color:var(--muted);margin:14px 0 0;line-height:1.7}
-  .cal{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;margin-top:20px}
-  .cal .d{border:1px solid var(--line);border-radius:9px;text-align:center;padding:7px 1px;font-size:11.5px;background:var(--surface2);color:var(--muted)}
-  .cal .d .dn{font-family:var(--mono);font-weight:600;font-size:14.5px;color:var(--ink2);display:block;line-height:1.25}
+  .cd-progress{height:8px;border-radius:99px;background:var(--surface3);overflow:hidden;margin-top:20px}
+  .cd-progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg, var(--gold-deep), var(--gold-bright));transition:width .6s ease}
+  .cd-progress-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--muted);margin-top:8px}
+  .cd-progress-row b{font-family:var(--mono);font-weight:600;color:var(--ink2)}
+
+  /* period calendar strip (full width under the hero) */
+  .cal-strip{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:24px 28px 20px;margin-bottom:56px}
+  .cal-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .cal-head h3{margin:0;font-family:var(--serif);font-size:19px;font-weight:900}
+  .cal-head span{font-size:13px;color:var(--muted)}
+  .cal-wd{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:18px;font-size:12px;font-weight:700;color:var(--muted);text-align:center}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px}
+  .cal .d{border:1px solid var(--line);border-radius:10px;text-align:center;padding:9px 2px 8px;font-size:11.5px;background:var(--surface2);color:var(--muted)}
+  .cal .d.blank{border:0;background:transparent}
+  .cal .d .dn{font-family:var(--mono);font-weight:600;font-size:16px;color:var(--ink2);display:block;line-height:1.25}
   .cal .d.today{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
   .cal .d.today .dn{color:var(--gold-deep)}
   @media (prefers-color-scheme: dark){ .cal .d.today .dn{color:var(--gold-bright)} }
   .cal .d.done{background:var(--gold);border-color:var(--gold);color:#3a2a05}
   .cal .d.done .dn{color:#221806}
   .cal .d.past{opacity:.45}
-  .cal-legend{font-size:12.5px;color:var(--muted);margin:12px 0 0;line-height:1.7}
+  .cal-legend{font-size:12.5px;color:var(--muted);margin:14px 0 0;line-height:1.7}
 
   /* ---------- stats row ---------- */
   .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-30px;position:relative;z-index:2}
@@ -326,7 +395,6 @@
     .console-grid{grid-template-columns:1fr}
     .console-col + .console-col{border-left:0;border-top:1px solid var(--line)}
     .steps,.calc-grid,.two,.split-legend,.invite-rules,.ref-stats,.examples,.lb-stats{grid-template-columns:1fr}
-    .cal{grid-template-columns:repeat(6,1fr)}
     .tier{grid-template-columns:1fr;gap:10px}
     .tier .t-mult{text-align:left}
     .contract-row{flex-direction:column}
@@ -342,6 +410,8 @@
     th,td{padding:11px 11px;font-size:13.5px}
     td.num,th.num{font-size:12.5px}
     .cd-cell .n{font-size:24px}
+    .cal-strip{padding:18px 16px 14px;margin-bottom:44px}
+    .cal .d .dn{font-size:14px}
     .console-col{padding:16px 18px 22px}
     .console-top{padding:18px 18px 0}
     .calc{padding:20px}
@@ -372,6 +442,10 @@
       <a href="#faq">风险与问答</a>
     </nav>
     <div class="nav-right">
+      <button class="theme-toggle" id="btn-theme" type="button" aria-label="切换深色 / 浅色模式">
+        <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
       <span class="nav-status"><span class="dot"></span>投稿期进行中</span>
       <a class="btn btn-gold btn-sm" href="#checkin">去签到</a>
     </div>
@@ -406,10 +480,20 @@
           <div class="cd-cell"><div class="n" id="cd-m">--</div><div class="u">分</div></div>
           <div class="cd-cell"><div class="n" id="cd-s">--</div><div class="u">秒</div></div>
         </div>
+        <div class="cd-progress" aria-hidden="true"><i id="cd-bar"></i></div>
+        <div class="cd-progress-row"><span>投稿期进度 · 11-18 开始 — 12-09 截止</span><b id="cd-pct">—</b></div>
         <p class="cd-note">距离投稿期结束（2026-12-09 08:00 UTC，台北时间 12-09 16:00）。结束后签到不再计入积分。</p>
-        <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
-        <p class="cal-legend">投稿期共 22 个 UTC 日期（11 月 18 日至 12 月 9 日）。每天以 UTC 日期为准，同一地址每天最多签到 1 次。</p>
       </div>
+    </div>
+
+    <div class="cal-strip">
+      <div class="cal-head">
+        <h3>投稿期签到日历</h3>
+        <span>共 22 个 UTC 日期 · 11 月 18 日至 12 月 9 日 · 同一地址每天最多签到 1 次</span>
+      </div>
+      <div class="cal-wd" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+      <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
+      <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡；在下方签到台开启预览模式签到后，今天的格子会点亮为金色。</p>
     </div>
   </div>
 </div>
@@ -428,9 +512,9 @@
       <div class="note">链上快照 · totalPoints</div>
     </div>
     <div class="stat-card">
-      <div class="k">投稿期剩余</div>
-      <div class="v"><span id="stat-remain">--</span><span class="unit">天</span></div>
-      <div class="note">与上方倒计时同步</div>
+      <div class="k">每日签到奖励</div>
+      <div class="v">10<span class="unit">分</span></div>
+      <div class="note">满勤 22 天 · 共 220 分</div>
     </div>
     <div class="stat-card">
       <div class="k">投稿截止</div>
@@ -444,7 +528,7 @@
       <span class="sec-num">01</span>
       <div>
         <h2>签到台</h2>
-        <p>签到资格只看签到地址是否持有 Agent ID：页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断。本页不提供网页登录钱包的入口，请按下方说明操作。</p>
+        <p>签到资格只看签到地址是否持有 Agent ID：在下方点「连接钱包」、用浏览器钱包插件连接后，页面会按 Agent ID 合约的 <span class="mono">balanceOf</span> 判断，并读出你链上的积分与签到记录。</p>
       </div>
     </div>
 
@@ -460,6 +544,7 @@
             <ol>
               <li>签到必须用<b>持有 Agent ID 的币安 Agent 钱包地址</b>，普通钱包没 ID 签不了。</li>
               <li><span class="wg-no">不要</span>在网站上扫码登录 Agent 钱包，<span class="wg-no">不要</span>输配对码。</li>
+              <li><strong>在本页连接钱包：</strong>点右侧「连接钱包」，用浏览器已安装的钱包插件（MetaMask、币安钱包插件、Trust Wallet 等）连接；连接与签到都由你在钱包自带弹窗里确认，本站不代签、不保存登录状态。</li>
               <li><strong>正确签法一：</strong>在币安 App 内置浏览器打开本站签到。</li>
               <li><strong>正确签法二：</strong>通过自己的 AI 代理从 Agent 钱包地址调签到合约，在 App 里确认。</li>
             </ol>
@@ -472,6 +557,8 @@
           </ul>
         </div>
         <div class="console-col">
+          <button class="btn btn-gold btn-connect" id="btn-connect" type="button">连接钱包</button>
+          <p class="wallet-note">只通过浏览器注入式钱包连接（window.ethereum）：点按钮后由钱包自带弹窗请你确认。本站不扫码、不用配对码、不用 WalletConnect、不代签，也不保存你的登录状态。</p>
           <div class="statgrid">
             <div class="stat"><div class="k">我的积分</div><div class="v" id="stat-points">—</div></div>
             <div class="stat"><div class="k">累计签到</div><div class="v" id="stat-days">—</div></div>
@@ -820,11 +907,23 @@
     account: null,
     chainOk: false,
     hasAgentId: null,   // null=未检查
-    checkedToday: false,
+    previewToday: false,
+    onchain: null,      // 连接钱包后读到的链上状态 { points, days, today }
+    txPending: false,
     points: 0,
     days: 0,
     previewDays: {}     // 预览模式本地记录 { 'YYYY-MM-DD': true }
   };
+
+  /* 函数选择器（keccak256 前 4 字节，已按合约源码核对） */
+  var SEL = {
+    balanceOf: "0x70a08231",        // Agent ID: balanceOf(address)
+    checkIn: "0xd9a59e33",          // 签到: checkIn(address referrer)
+    pointsOf: "0xcf6a4403",         // 签到: pointsOf(address) 有效积分
+    checkInCount: "0x9ec11dff",     // 签到: checkInCount(address)
+    hasCheckedInToday: "0x3504f52b" // 签到: hasCheckedInToday(address)
+  };
+  var ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
   function $(id){ return document.getElementById(id); }
   function utcDateStr(ts){
@@ -846,8 +945,10 @@
     $("cd-h").textContent = String(Math.floor(s%86400/3600)).padStart(2,"0");
     $("cd-m").textContent = String(Math.floor(s%3600/60)).padStart(2,"0");
     $("cd-s").textContent = String(s%60).padStart(2,"0");
-    var remain = $("stat-remain");
-    if (remain) remain.textContent = Math.floor(s/86400);
+    var total = CONFIG.periodEndUTC - CONFIG.periodStartUTC;
+    var pct = total > 0 ? Math.min(100, Math.max(0, (Date.now() - CONFIG.periodStartUTC) / total * 100)) : 0;
+    var bar = $("cd-bar"); if (bar) bar.style.width = pct.toFixed(1) + "%";
+    var pctEl = $("cd-pct"); if (pctEl) pctEl.textContent = pct.toFixed(0) + "%";
   }
   tick(); setInterval(tick, 1000);
 
@@ -855,6 +956,14 @@
   function renderCal(){
     var cal = $("cal"); cal.innerHTML = "";
     var todayStr = utcDateStr(Date.now());
+    // 标准 7 列日历：按 11 月 18 日（周三）所在星期补齐首行空格
+    var startDow = new Date(CONFIG.periodStartUTC).getUTCDay();
+    for (var b = 0; b < startDow; b++){
+      var blank = document.createElement("div");
+      blank.className = "d blank";
+      blank.setAttribute("aria-hidden", "true");
+      cal.appendChild(blank);
+    }
     for (var t = CONFIG.periodStartUTC; t < Date.UTC(2026,11,9,0,0,0) + 86400000; t += 86400000){
       var ds = utcDateStr(t);
       var d = new Date(t);
@@ -886,26 +995,154 @@
   }
   function render(){
     var preview = $("preview-mode").checked;
-    // 统计：本页不在网页上登录钱包，正式积分以链上记录为准；预览模式只显示本地模拟值
-    $("stat-points").textContent = preview ? state.points + "（预览）" : "—";
-    $("stat-days").textContent = preview ? state.days : "—";
-    $("stat-today").innerHTML = state.checkedToday
+    // 展示值来源：预览模式用本地模拟值；已连接钱包用链上读到的真实值；未连接显示 —
+    var dispToday;
+    if (preview){
+      $("stat-points").textContent = state.points + "（预览）";
+      $("stat-days").textContent = state.days;
+      dispToday = state.previewToday;
+    } else if (state.onchain){
+      $("stat-points").textContent = state.onchain.points;
+      $("stat-days").textContent = state.onchain.days;
+      dispToday = state.onchain.today;
+    } else {
+      $("stat-points").textContent = "—";
+      $("stat-days").textContent = "—";
+      dispToday = false;
+    }
+    $("stat-today").innerHTML = dispToday
       ? "<span class='badge badge-ok'>已签到</span>"
       : "<span class='badge badge-wait'>待签到</span>";
     if (state.hasAgentId === true) $("stat-agent").innerHTML = "<span class='badge badge-ok'>持有</span>";
     else if (state.hasAgentId === false) $("stat-agent").innerHTML = "<span class='badge badge-no'>未持有</span>";
     else $("stat-agent").innerHTML = "<span class='badge badge-wait'>未检查</span>";
     // 清单
-    setLi("ck-wallet", "");
+    setLi("ck-wallet", state.account ? (state.chainOk ? "done" : "fail") : "");
     setLi("ck-agent", state.hasAgentId ? "done" : (state.hasAgentId === false ? "fail" : ""));
     setLi("ck-period", inPeriod() ? "done" : "fail");
-    setLi("ck-today", state.checkedToday ? "done" : "");
+    setLi("ck-today", dispToday ? "done" : "");
     // 按钮
     var btn = $("btn-checkin");
     if (!inPeriod()){ btn.disabled = true; btn.textContent = "不在投稿期内"; }
-    else if (state.checkedToday){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
-    else if (preview){ btn.disabled = false; btn.textContent = "预览签到 +10 分（不上链）"; }
-    else { btn.disabled = true; btn.textContent = "请按上方钱包连接说明签到"; }
+    else if (preview){
+      if (state.previewToday){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
+      else { btn.disabled = false; btn.textContent = "预览签到 +10 分（不上链）"; }
+    }
+    else if (state.txPending){ btn.disabled = true; btn.textContent = "签到确认中…"; }
+    else if (state.onchain && state.onchain.today){ btn.disabled = true; btn.textContent = "今日已签到，明天再来"; }
+    else if (!state.account){ btn.disabled = true; btn.textContent = "请先连接钱包"; }
+    else if (!state.chainOk){ btn.disabled = true; btn.textContent = "请先在钱包里切换到 BSC 网络"; }
+    else if (state.hasAgentId === false){ btn.disabled = true; btn.textContent = "该地址没有 Agent ID，无法签到"; }
+    else if (state.hasAgentId === true){ btn.disabled = false; btn.textContent = "今日签到 +10 分"; }
+    else { btn.disabled = true; btn.textContent = "正在读取链上状态…"; }
+  }
+
+  /* ============ 钱包连接（仅浏览器注入式 window.ethereum） ============ */
+  function padAddr(a){
+    return String(a).toLowerCase().replace("0x", "").padStart(64, "0");
+  }
+  function ethCall(to, data){
+    return window.ethereum.request({ method: "eth_call", params: [{ to: to, data: data }, "latest"] });
+  }
+  function callUint(to, data){
+    return ethCall(to, data).then(function(res){
+      if (!res || res === "0x") return 0;
+      return Number(BigInt(res));
+    });
+  }
+  function renderConnectBtn(){
+    var btn = $("btn-connect");
+    if (state.account){
+      btn.disabled = false;
+      btn.textContent = "已连接 · " + shortAddr(state.account) + "（点此刷新）";
+    } else {
+      btn.disabled = false;
+      btn.textContent = "连接钱包";
+    }
+  }
+  /* 连接后（或账户/网络变化后）从链上读：Agent ID balanceOf、积分、签到天数、今日是否已签 */
+  function refreshChainState(){
+    if (!state.account || !state.chainOk || !window.ethereum) return Promise.resolve();
+    var acct = state.account;
+    return Promise.all([
+      callUint(CONFIG.agentIdContract, SEL.balanceOf + padAddr(acct)),
+      callUint(CONFIG.checkInContract, SEL.pointsOf + padAddr(acct)),
+      callUint(CONFIG.checkInContract, SEL.checkInCount + padAddr(acct)),
+      callUint(CONFIG.checkInContract, SEL.hasCheckedInToday + padAddr(acct))
+    ]).then(function(r){
+      if (state.account !== acct) return; // 期间切换了账户，丢弃旧结果
+      state.hasAgentId = r[0] > 0;
+      state.onchain = { points: r[1], days: r[2], today: r[3] === 1 };
+      render();
+    }).catch(function(){
+      showMsg("读取链上状态失败，请确认钱包在 BSC 网络后点「连接钱包」刷新重试。", "err");
+    });
+  }
+  $("btn-connect").addEventListener("click", function(){
+    if (!window.ethereum){
+      showMsg("没有检测到浏览器钱包插件：请先安装 MetaMask、币安钱包插件或 Trust Wallet 等浏览器钱包后再点连接；也可以在币安 App 内置浏览器打开本站，用持有 Agent ID 的钱包连接。本站只用浏览器注入式连接，不扫码、不用配对码、不用 WalletConnect。", "warn");
+      return;
+    }
+    var btn = $("btn-connect");
+    btn.disabled = true;
+    btn.textContent = "连接中，请在钱包弹窗里确认…";
+    window.ethereum.request({ method: "eth_requestAccounts" }).then(function(accounts){
+      if (!accounts || !accounts.length) throw new Error("no-account");
+      state.account = accounts[0];
+      return window.ethereum.request({ method: "eth_chainId" });
+    }).then(function(chainId){
+      if (chainId === CONFIG.chainHex){ state.chainOk = true; return; }
+      // 不在 BSC：请用户在自己钱包里切换网络（仍由钱包弹窗确认）
+      return window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: CONFIG.chainHex }] })
+        .then(function(){ return window.ethereum.request({ method: "eth_chainId" }); })
+        .then(function(cid2){ state.chainOk = (cid2 === CONFIG.chainHex); })
+        .catch(function(){ state.chainOk = false; });
+    }).then(function(){
+      renderConnectBtn(); render();
+      if (!state.chainOk){
+        showMsg("已连接 " + shortAddr(state.account) + "，但当前钱包不在 BSC 网络（Chain ID 56）。请在钱包里切换到 BSC 后，再点连接按钮刷新。", "warn");
+        return;
+      }
+      return refreshChainState().then(function(){
+        if (state.hasAgentId === true){
+          if (state.onchain && state.onchain.today){
+            showMsg("已连接 " + shortAddr(state.account) + "：该地址持有 Agent ID，今天已经签到过了，明天再来。积分与签到天数已从链上读出。", "info");
+          } else {
+            showMsg("已连接 " + shortAddr(state.account) + "：该地址持有 Agent ID，可以签到。点下方「今日签到 +10 分」，在钱包弹窗里确认交易即可。", "info");
+          }
+        } else if (state.hasAgentId === false){
+          showMsg("已连接 " + shortAddr(state.account) + "，但该地址没有 Agent ID（balanceOf = 0），签不了到。正确方式：在币安 App 内置浏览器里打开本站、用持有 Agent ID 的钱包连接，或通过自己的 AI 代理从 Agent 钱包地址签到。", "warn");
+        }
+      });
+    }).catch(function(err){
+      renderConnectBtn(); render();
+      if (err && err.code === 4001){
+        showMsg("你取消了钱包连接。连接需由你在钱包自带弹窗里确认，本站不会代为连接。", "warn");
+      } else {
+        showMsg("连接失败，请确认钱包已解锁后重试。", "err");
+      }
+    });
+  });
+  if (window.ethereum && window.ethereum.on){
+    window.ethereum.on("accountsChanged", function(accounts){
+      if (!accounts || !accounts.length){
+        state.account = null; state.chainOk = false; state.hasAgentId = null; state.onchain = null;
+        renderConnectBtn(); render();
+        showMsg("钱包已断开或切换到未连接状态，点「连接钱包」可重新连接。", "warn");
+        return;
+      }
+      state.account = accounts[0];
+      state.hasAgentId = null; state.onchain = null;
+      renderConnectBtn();
+      window.ethereum.request({ method: "eth_chainId" }).then(function(cid){
+        state.chainOk = (cid === CONFIG.chainHex);
+        if (state.chainOk) refreshChainState(); else render();
+      });
+    });
+    window.ethereum.on("chainChanged", function(cid){
+      state.chainOk = (cid === CONFIG.chainHex);
+      if (state.chainOk && state.account) refreshChainState(); else render();
+    });
   }
 
   /* ============ 签到 ============ */
@@ -916,20 +1153,52 @@
       var ds = utcDateStr(Date.now());
       if (state.previewDays[ds]){ showMsg("今天已经在预览中签到过了。", "warn"); return; }
       state.previewDays[ds] = true;
-      state.checkedToday = true;
+      state.previewToday = true;
       state.points += CONFIG.pointsPerDay;
       state.days += 1;
       renderCal(); render();
-      showMsg("预览签到完成：+10 分（本地模拟，未上链、不计入正式积分）。正式签到请按上方钱包连接说明，在币安 App 内打开本站或通过自己的 AI 代理调用签到合约完成。", "info");
+      showMsg("预览签到完成：+10 分（本地模拟，未上链、不计入正式积分）。正式签到请先连接钱包，用持有 Agent ID 的地址在钱包弹窗里确认签到交易。", "info");
       return;
     }
-    // 正式签到不在本页发起：请按上方钱包连接说明，在币安 App 内打开本站签到，或通过自己的 AI 代理从 Agent 钱包地址调用签到合约并在 App 里确认。
-    showMsg("正式签到请按上方钱包连接说明操作：不要在网站上扫码登录 Agent 钱包、不要输配对码；请在币安 App 内打开本站，或通过自己的 AI 代理从 Agent 钱包地址调用签到合约。", "info");
+    if (!state.account || !state.chainOk || state.hasAgentId !== true){
+      showMsg("请先点上方「连接钱包」，用持有 Agent ID 的地址连接后再签到；没有 Agent ID 的地址签不了到。", "warn");
+      return;
+    }
+    if (state.onchain && state.onchain.today){ showMsg("今天已经签到过了，明天再来。", "warn"); return; }
+    // 邀请人：仅当页面带 ?ref=0x… 且不是自己时传给合约，否则传零地址（合约只在首次签到时认邀请）
+    var referrer = ZERO_ADDR;
+    try {
+      var ref = new URLSearchParams(location.search).get("ref");
+      if (ref && /^0x[0-9a-fA-F]{40}$/.test(ref) && ref.toLowerCase() !== state.account.toLowerCase()) referrer = ref;
+    } catch (e) {}
+    state.txPending = true; render();
+    window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [{ from: state.account, to: CONFIG.checkInContract, data: SEL.checkIn + padAddr(referrer) }]
+    }).then(function(txHash){
+      showMsg("签到交易已提交（" + String(txHash).slice(0, 10) + "…），正在等链上确认，稍后会自动刷新你的积分。签到交易由你在钱包里确认，本站不代签。", "info");
+      setTimeout(function(){
+        refreshChainState().then(function(){
+          state.txPending = false; render();
+          if (state.onchain && state.onchain.today){
+            showMsg("签到成功：+10 分已上链，积分与签到天数已刷新。", "info");
+          }
+        });
+      }, 5000);
+    }).catch(function(err){
+      state.txPending = false; render();
+      if (err && err.code === 4001){
+        showMsg("你取消了签到交易，签到未完成。签到需由你在钱包弹窗里确认，本站不代签。", "warn");
+      } else {
+        var detail = err && err.message ? String(err.message).slice(0, 180) : "未知错误";
+        showMsg("签到交易未成功：" + detail, "err");
+      }
+    });
   });
 
   $("preview-mode").addEventListener("change", function(){
     if (!this.checked){
-      state.previewDays = {}; state.points = 0; state.days = 0; state.checkedToday = false;
+      state.previewDays = {}; state.points = 0; state.days = 0; state.previewToday = false;
       renderCal();
       showMsg("已退出预览模式，本地模拟记录已清空。", "info");
     } else {
@@ -1046,6 +1315,29 @@
     if (!refLink) return;
     copyText(refLink, this, "已复制", "复制链接");
   });
+
+  /* ============ 深色 / 浅色切换 ============ */
+  function effectiveTheme(){
+    var attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark" || attr === "light") return attr;
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  function syncThemeBtn(){
+    var btn = $("btn-theme");
+    if (!btn) return;
+    btn.setAttribute("aria-label", effectiveTheme() === "dark" ? "切换到浅色模式" : "切换到深色模式");
+  }
+  $("btn-theme").addEventListener("click", function(){
+    var next = effectiveTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("agentcheck-theme", next); } catch (e) {}
+    syncThemeBtn();
+  });
+  if (window.matchMedia){
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", syncThemeBtn);
+  }
+  syncThemeBtn();
 
   render();
 })();
