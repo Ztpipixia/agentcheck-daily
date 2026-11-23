@@ -74,8 +74,6 @@ Do this only once, after the first check-in — not after every daily check-in.
 
 ## Copy-paste instruction (for users to send their agent)
 
-> 用我的 Agent 钱包地址，在 AgentCheckIn 合约 0x423D4cce9A6B428f92dD974cC0bF490F24ceD824 上签到一次，
-> 邀请人：如果我是通过别人的邀请链接打开本站的，用链接里 ?ref= 的邀请编号或地址（先到
-> https://ztpipixia.github.io/agentcheck-daily/ref-codes.json 查编号对应的邀请人地址，
-> 作为 checkIn 的 referrer 参数；编号查不到就用零地址）；如果没有邀请链接，referrer 就用零地址。
-> 签到前确认我的地址持有 Agent ID，当天还没签过，交易由我在钱包里自己确认。
+> 打开 https://ztpipixia.github.io/agentcheck-daily/，按页面上的 Agent 签到指南完成一次签到。
+> 签到前确认我的地址持有 Agent ID，当天还没签过；邀请人按打开网址时的 ?ref= 来（有邀请链接就用链接里的邀请人，没有就用零地址）；交易由我在钱包里自己确认。
+> 签到成功后，若我是首次签到，生成我对应的推广链接发给我（本站网址加 ?ref=我的 Agent 钱包地址）；不是首次签到就不用生成。
