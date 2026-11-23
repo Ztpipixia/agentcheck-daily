@@ -106,27 +106,27 @@
   .hero-meta::-webkit-scrollbar{display:none}
   .hero-meta .pill{flex:none;white-space:nowrap}
   .pill-short{display:none}
-  .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:500;color:var(--ink2);box-shadow:var(--shadow-sm)}
-  .pill b{color:var(--ink)}
-  .hero h1{font-family:var(--serif);font-size:clamp(46px,4.6vw,78px);line-height:1.14;margin:32px 0 24px;font-weight:900;letter-spacing:.005em;color:#fff7e0;text-shadow:0 4px 34px rgba(0,0,0,.55)}
+  .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,240,200,.34);background:linear-gradient(120deg, rgba(20,14,4,.42), rgba(12,8,2,.26) 55%, rgba(24,16,4,.34));border-radius:999px;padding:6px 14px;font-weight:500;color:#e8dcb4;box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -10px 16px -12px rgba(255,220,140,.20), 0 10px 22px -14px rgba(0,0,0,.6)}
+  .pill b{color:#fff7e0}
+  .hero h1{font-family:var(--serif);font-size:clamp(38px,3.8vw,62px);line-height:1.16;margin:28px 0 20px;font-weight:900;letter-spacing:.005em;color:#fff7e0;text-shadow:0 4px 34px rgba(0,0,0,.55)}
   .hero h1 .hl{white-space:nowrap;background:linear-gradient(100deg,#a8740f 0%,#f2c14e 28%,#fff0b8 50%,#f2c14e 72%,#a8740f 100%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5.5s linear infinite}
   @keyframes shine{to{background-position:220% center}}
-  .lede{font-size:17.5px;line-height:1.85;color:#ddd2ae;margin:0 0 26px;max-width:37em;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+  .lede{font-size:16px;line-height:1.8;color:#ddd2ae;margin:0 0 22px;max-width:37em;text-shadow:0 2px 16px rgba(0,0,0,.5)}
   .lede strong{color:#fff3d0}
-  .condbox{border:1px solid rgba(242,193,78,.4);background:rgba(18,12,3,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:var(--radius);padding:18px 22px;font-size:14.5px;line-height:1.8;color:#eee2ba;max-width:44em}
+  .condbox{border:1px solid rgba(242,193,78,.4);background:rgba(18,12,3,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:var(--radius);padding:16px 20px;font-size:14px;line-height:1.75;color:#eee2ba;max-width:44em}
   .condbox b{color:#f2c14e}
 
   /* hero 内的倒计时横条：大号数字直接压在主图上，和标题放在一起 */
-  .cd-strip{position:relative;overflow:hidden;margin-top:40px;border:1px solid rgba(255,240,200,.34);border-radius:26px;padding:20px 36px 18px;background:linear-gradient(120deg, rgba(20,14,4,.30), rgba(12,8,2,.16) 55%, rgba(24,16,4,.24));box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7);animation:heroUp .9s var(--ease) .35s both}
+  .cd-strip{position:relative;overflow:hidden;margin-top:26px;border:1px solid rgba(255,240,200,.34);border-radius:26px;padding:20px 36px 18px;background:linear-gradient(120deg, rgba(20,14,4,.30), rgba(12,8,2,.16) 55%, rgba(24,16,4,.24));box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7);animation:heroUp .9s var(--ease) .35s both}
   .cd-strip::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 30%, rgba(255,244,214,.14) 47%, rgba(255,244,214,.05) 55%, transparent 70%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.5s var(--ease)}
   .cd-strip:hover::after{background-position:-70% 0}
   .cd-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .cd-title h2{margin:0;font-family:var(--serif);font-size:23px;font-weight:900;color:#fff7e0}
+  .cd-title h2{margin:0;font-family:var(--serif);font-size:20px;font-weight:900;color:#fff7e0}
   .cd-title span{font-size:13px;color:#cdbd8b}
   .countdown{display:flex;margin-top:14px}
   .cd-cell{flex:1;text-align:center;padding:2px 4px}
   .cd-cell + .cd-cell{border-left:1px solid rgba(242,193,78,.20)}
-  .cd-cell .n{font-family:var(--mono);font-size:clamp(46px,4.8vw,68px);font-weight:600;line-height:1.05;letter-spacing:-.02em;color:#fff7e0;text-shadow:0 3px 22px rgba(0,0,0,.5)}
+  .cd-cell .n{font-family:var(--mono);font-size:clamp(38px,4vw,56px);font-weight:600;line-height:1.05;letter-spacing:-.02em;color:#fff7e0;text-shadow:0 3px 22px rgba(0,0,0,.5)}
   .cd-cell .u{font-size:13px;color:#cdbd8b;margin-top:7px;letter-spacing:.28em}
   .cd-cell.sec .n{color:#f4cd60;animation:cdPulse 2s ease-in-out infinite}
   @keyframes cdPulse{0%,100%{text-shadow:0 0 0 rgba(242,193,78,0)}50%{text-shadow:0 0 26px rgba(242,193,78,.65)}}
@@ -378,7 +378,7 @@
     .hero-shade{background:linear-gradient(180deg, rgba(7,5,2,.84) 0%, rgba(7,5,2,.60) 55%, rgba(7,5,2,.55) 100%)}
     .hero-bg{object-position:70% 50%}
     .hero-copy{max-width:100%}
-    .cd-strip{padding:18px 22px 14px;margin-top:36px}
+    .cd-strip{padding:18px 22px 14px;margin-top:24px}
     .hero-lower-wrap{padding-top:36px}
     .stats-row{grid-template-columns:1fr 1fr}
     .steps,.two,.split-legend,.invite-rules,.ref-stats,.examples,.lb-stats{grid-template-columns:1fr}
@@ -410,14 +410,14 @@
     .hero .pill{padding:4px 8px;gap:4px}
     .hero-meta .pill-full{display:none}
     .hero-meta .pill-short{display:inline}
-    .hero h1{font-size:42px}
+    .hero h1{font-size:35px}
     .cd-strip{padding:14px 16px 12px}
     .cd-cell .u{letter-spacing:.14em}
     .cmd-steps li{font-size:15px}
     .agent-cmd{padding:20px 18px}
     th,td{padding:12px 12px;font-size:13.5px}
     td.num,th.num{font-size:12.5px}
-    .cd-cell .n{font-size:34px}
+    .cd-cell .n{font-size:30px}
     .cal-strip{padding:20px 16px 16px}
     .cal .d .dn{font-size:14px}
     .console-top{padding:20px 20px 0}
@@ -542,7 +542,7 @@
             <span>全网签到人数 <b>3</b> 人</span>
             <span>全网总积分 <b>30</b> 分</span>
           </span>
-          <span class="snap-note">链上快照（2026-11-23 19:33 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+          <span class="snap-note">链上快照（2026-11-23 19:37 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
         </div>
       </div>
     </div>
@@ -749,7 +749,7 @@
       <span class="sec-num">05</span>
       <div>
         <h2>积分榜</h2>
-        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 19:33 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 19:37 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
       </div>
     </div>
     <div class="stats-row" data-view="board" aria-label="关键数据">
@@ -786,7 +786,7 @@
       </tbody>
     </table>
     <p class="tbl-note">排行榜按钱包地址标识签到者，地址前后各显示几位。</p>
-    <p class="tbl-note">快照说明：截至 2026-11-23 19:33，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
+    <p class="tbl-note">快照说明：截至 2026-11-23 19:37，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
   </section>
 
   <section id="contracts" data-view="more">
@@ -892,7 +892,7 @@
     agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
     checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
     distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
-    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 19:33 链上快照
+    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 19:37 链上快照
     pointsPerDay: 10,
     periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
