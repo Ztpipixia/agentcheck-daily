@@ -115,7 +115,9 @@
   .js-anim .reveal.d3{transition-delay:.24s}
 
   /* ---------- top nav ---------- */
-  .topnav{position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--bg) 84%, transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--line)}
+  .topnav{position:sticky;top:0;z-index:50;overflow:hidden;background:linear-gradient(180deg, color-mix(in srgb, var(--surface) 52%, transparent), color-mix(in srgb, var(--bg) 58%, transparent));backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);border-bottom:1px solid color-mix(in srgb, var(--gold-line) 45%, rgba(255,255,255,.30));box-shadow:inset 0 1px 0 rgba(255,255,255,.38), inset 0 -14px 26px -20px rgba(255,255,255,.28), 0 14px 34px -20px rgba(30,20,2,.35)}
+  .topnav::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 32%, rgba(255,255,255,.16) 47%, rgba(255,255,255,.05) 54%, transparent 68%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.4s var(--ease)}
+  .topnav:hover::after{background-position:-70% 0}
   .nav-in{display:flex;align-items:center;gap:32px;height:78px}
   .brand{display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--ink);flex:none}
   .brand-mark{width:44px;height:44px;flex:none;filter:drop-shadow(0 6px 14px rgba(163,116,12,.35))}
@@ -151,14 +153,14 @@
   .view-tabs{display:none}
 
   /* ---------- hero（主图首屏） ---------- */
-  .hero-zone{position:relative;overflow:hidden;background:#0a0703;border-bottom:1px solid #2b2110}
-  .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:64% 50%;z-index:0;animation:kenburns 38s ease-in-out infinite alternate;will-change:transform}
+  .hero-zone{position:relative;overflow:hidden;background:radial-gradient(1100px 520px at 82% 18%, rgba(242,193,78,.16), transparent 60%),linear-gradient(155deg, #201503 0%, #120b02 52%, #0a0703 100%);border-bottom:1px solid #2b2110}
+  .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:64% 50%;z-index:0;filter:brightness(1.16) saturate(1.06);animation:kenburns 38s ease-in-out infinite alternate;will-change:transform}
   @keyframes kenburns{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.14) translate(-1.6%,1.2%)}}
   .hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:
-    linear-gradient(90deg, rgba(7,5,2,.92) 0%, rgba(7,5,2,.78) 34%, rgba(7,5,2,.34) 60%, rgba(7,5,2,.06) 82%),
-    linear-gradient(180deg, rgba(7,5,2,.42) 0%, transparent 26%, transparent 62%, rgba(7,5,2,.55) 100%)}
+    linear-gradient(90deg, rgba(7,5,2,.88) 0%, rgba(7,5,2,.60) 36%, rgba(7,5,2,.20) 62%, rgba(7,5,2,.02) 84%),
+    linear-gradient(180deg, rgba(7,5,2,.32) 0%, transparent 24%, transparent 56%, rgba(7,5,2,.46) 100%)}
   #hero-particles{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
-  .hero-inner{position:relative;z-index:3;padding:104px 0 196px}
+  .hero-inner{position:relative;z-index:3;padding:96px 0 88px}
   .hero-copy{max-width:800px}
   .hero-inner > .hero-copy > *{animation:heroUp .9s var(--ease) both}
   .hero-inner > .hero-copy > *:nth-child(2){animation-delay:.1s}
@@ -178,50 +180,42 @@
   .condbox{border:1px solid rgba(242,193,78,.4);background:rgba(18,12,3,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:var(--radius);padding:18px 22px;font-size:14.5px;line-height:1.8;color:#eee2ba;max-width:44em}
   .condbox b{color:#f2c14e}
 
-  /* hero 下沿重叠区：倒计时 + 签到面板 */
-  .hero-lower-wrap{position:relative;z-index:6}
-  .hero-lower{display:grid;grid-template-columns:.92fr 1.08fr;gap:28px;align-items:start;margin-top:-118px}
-  .hero-lower .cd-card,.hero-lower .console{margin-top:0}
+  /* hero 内的倒计时横条：大号数字直接压在主图上，和标题放在一起 */
+  .cd-strip{position:relative;overflow:hidden;margin-top:48px;border:1px solid rgba(255,240,200,.34);border-radius:26px;padding:30px 36px 26px;background:linear-gradient(120deg, rgba(20,14,4,.55), rgba(12,8,2,.34) 55%, rgba(24,16,4,.45));backdrop-filter:blur(22px) saturate(1.65);-webkit-backdrop-filter:blur(22px) saturate(1.65);box-shadow:inset 0 1px 0 rgba(255,246,220,.35), inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -18px 30px -22px rgba(255,220,140,.18), 0 34px 64px -28px rgba(0,0,0,.7);animation:heroUp .9s var(--ease) .35s both}
+  .cd-strip::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg, transparent 30%, rgba(255,244,214,.14) 47%, rgba(255,244,214,.05) 55%, transparent 70%);background-size:260% 100%;background-position:130% 0;transition:background-position 1.5s var(--ease)}
+  .cd-strip:hover::after{background-position:-70% 0}
+  .cd-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .cd-title h2{margin:0;font-family:var(--serif);font-size:23px;font-weight:900;color:#fff7e0}
+  .cd-title span{font-size:13px;color:#cdbd8b}
+  .countdown{display:flex;margin-top:24px}
+  .cd-cell{flex:1;text-align:center;padding:2px 4px}
+  .cd-cell + .cd-cell{border-left:1px solid rgba(242,193,78,.20)}
+  .cd-cell .n{font-family:var(--mono);font-size:clamp(46px,4.8vw,68px);font-weight:600;line-height:1.05;letter-spacing:-.02em;color:#fff7e0;text-shadow:0 3px 22px rgba(0,0,0,.5)}
+  .cd-cell .u{font-size:13px;color:#cdbd8b;margin-top:7px;letter-spacing:.28em}
+  .cd-cell.sec .n{color:#f4cd60;animation:cdPulse 2s ease-in-out infinite}
+  @keyframes cdPulse{0%,100%{text-shadow:0 0 0 rgba(242,193,78,0)}50%{text-shadow:0 0 26px rgba(242,193,78,.65)}}
+  .cd-note{font-size:13.5px;color:#bfb183;margin:18px 0 0;line-height:1.7}
+  .cd-progress{height:8px;border-radius:99px;background:rgba(255,248,230,.16);overflow:hidden;margin-top:24px}
+  .cd-progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg, #a8740f, #f2c14e);transition:width .6s ease}
+  .cd-progress-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:#bfb183;margin-top:9px}
+  .cd-progress-row b{font-family:var(--mono);font-weight:600;color:#fff3d0}
 
-  /* countdown card */
-  .cd-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:28px 30px 24px;position:relative;overflow:hidden;transition:transform .3s var(--ease), box-shadow .3s ease}
-  .cd-card:hover{transform:translateY(-4px);box-shadow:var(--glow)}
-  .cd-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--gold-deep), var(--gold-bright), var(--gold-deep))}
-  .cd-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-  .cd-title h2{margin:0;font-family:var(--serif);font-size:22px;font-weight:900}
-  .cd-title span{font-size:12.5px;color:var(--muted)}
-  .countdown{display:flex;gap:12px;margin-top:20px}
-  .cd-cell{flex:1;background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:15px 6px 12px;text-align:center}
-  .cd-cell .n{font-family:var(--mono);font-size:34px;font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--ink)}
-  .cd-cell .u{font-size:12px;color:var(--muted);margin-top:4px}
-  .cd-cell.sec{border-color:var(--gold-line)}
-  .cd-cell.sec .n{color:var(--gold);animation:cdPulse 2s ease-in-out infinite}
-  @keyframes cdPulse{0%,100%{text-shadow:0 0 0 rgba(207,152,23,0)}50%{text-shadow:0 0 20px rgba(207,152,23,.55)}}
-  .cd-note{font-size:13px;color:var(--muted);margin:16px 0 0;line-height:1.7}
-  .cd-progress{height:8px;border-radius:99px;background:var(--surface3);overflow:hidden;margin-top:22px}
-  .cd-progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg, var(--gold-deep), var(--gold-bright));transition:width .6s ease}
-  .cd-progress-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--muted);margin-top:9px}
-  .cd-progress-row b{font-family:var(--mono);font-weight:600;color:var(--ink2)}
+  /* hero 下方：Agent 签到面板 + 日历 */
+  .hero-lower-wrap{position:relative;z-index:6;padding-top:48px}
 
-  /* agent console：描边渐变流动 */
-  .console{background:var(--surface);border:1px solid var(--gold-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
-  .console::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
-    background:linear-gradient(115deg, var(--gold-deep), var(--gold-bright), rgba(242,193,78,.12), var(--gold-bright), var(--gold-deep));
-    background-size:280% 280%;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;
-    mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite:exclude;
-    animation:borderFlow 7s linear infinite}
-  @keyframes borderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  /* agent console：柔和阴影 + 细边，不用粗金边 */
+  .console{background:linear-gradient(180deg, var(--surface2), var(--surface) 55%);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;position:relative}
   .console-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:26px 32px 0}
   .console-top h3{margin:0;font-family:var(--serif);font-size:24px;font-weight:900}
   .console-chip{flex:none;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--gold-ink);background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:999px;padding:5px 13px}
   .console-col{padding:18px 32px 30px}
-  .console .sub{font-size:14.5px;line-height:1.8;color:var(--muted);margin:0 0 20px}
-  .agent-cmd{border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:var(--radius);padding:20px 22px}
-  .agent-cmd-label{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--gold-ink);margin:0 0 9px}
-  .agent-cmd-text{margin:0;font-size:15px;line-height:1.9;color:var(--ink)}
+  .console .sub{font-size:15px;line-height:1.85;color:var(--muted);margin:0 0 22px}
+  .agent-cmd{border:1px solid var(--line2);background:var(--surface);border-radius:var(--radius);padding:26px 28px;box-shadow:var(--shadow-sm)}
+  .agent-cmd-label{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--gold-ink);margin:0 0 16px}
+  .cmd-steps{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+  .cmd-steps li{display:flex;gap:13px;align-items:flex-start;font-size:15.5px;line-height:1.85;color:var(--ink)}
+  .cmd-steps .cmd-n{flex:none;width:26px;height:26px;margin-top:3px;display:grid;place-items:center;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-line);color:var(--gold-ink);font-family:var(--mono);font-size:13px;font-weight:600}
+  .agent-cmd .btn-big{margin-top:24px;font-size:17px;padding:18px 20px}
   .agent-why{font-size:13.5px;line-height:1.8;color:var(--muted);margin:16px 0 0}
   .snapshot{margin-top:18px;border:1px solid var(--line);background:var(--surface2);border-radius:16px;padding:16px 18px;font-size:13.5px;color:var(--ink2)}
   .snapshot .snap-nums{display:flex;flex-wrap:wrap;gap:8px 26px}
@@ -229,22 +223,19 @@
   .snapshot .snap-note{display:block;font-size:12.5px;line-height:1.7;color:var(--muted);margin-top:9px}
 
   /* calendar strip */
-  .cal-strip{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:28px 32px 22px;margin:30px 0 60px;transition:transform .3s var(--ease), box-shadow .3s ease}
+  .cal-strip{position:relative;background:linear-gradient(180deg, var(--surface2), var(--surface) 60%);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:28px 32px 22px;margin:34px 0 60px;transition:transform .3s var(--ease), box-shadow .3s ease}
   .cal-strip:hover{transform:translateY(-3px);box-shadow:var(--glow)}
   .cal-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
   .cal-head h3{margin:0;font-family:var(--serif);font-size:20px;font-weight:900}
   .cal-head span{font-size:13px;color:var(--muted)}
   .cal-wd{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:20px;font-size:12px;font-weight:700;color:var(--muted);text-align:center}
   .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px}
-  .cal .d{border:1px solid var(--line);border-radius:12px;text-align:center;padding:10px 2px 9px;font-size:11.5px;background:var(--surface2);color:var(--muted)}
+  .cal .d{border:1px solid var(--line2);border-radius:12px;text-align:center;padding:13px 2px 11px;font-size:12px;background:var(--surface3);color:var(--ink2)}
   .cal .d.blank{border:0;background:transparent}
-  .cal .d .dn{font-family:var(--mono);font-weight:600;font-size:17px;color:var(--ink2);display:block;line-height:1.25}
-  .cal .d.today{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold), 0 0 16px -4px rgba(207,152,23,.55)}
-  .cal .d.today .dn{color:var(--gold-deep)}
-  @media (prefers-color-scheme: dark){ .cal .d.today .dn{color:var(--gold-bright)} }
-  :root[data-theme="dark"] .cal .d.today .dn{color:var(--gold-bright)}
-  :root[data-theme="light"] .cal .d.today .dn{color:var(--gold-deep)}
-  .cal .d.past{opacity:.45}
+  .cal .d .dn{font-family:var(--mono);font-weight:600;font-size:19px;color:var(--ink);display:block;line-height:1.25}
+  .cal .d.today{background:linear-gradient(180deg, var(--gold-bright), var(--gold-deep));border-color:transparent;color:#241a04;font-weight:700;box-shadow:0 10px 22px -8px rgba(163,116,12,.65), 0 0 22px -4px rgba(207,152,23,.6)}
+  .cal .d.today .dn{color:#241a04}
+  .cal .d.past{opacity:.5}
   .cal-legend{font-size:12.5px;color:var(--muted);margin:16px 0 0;line-height:1.7}
 
   /* ---------- stats row ---------- */
@@ -438,11 +429,12 @@
   }
   @media (max-width:900px){
     .wrap{padding:0 24px}
-    .hero-inner{padding:64px 0 150px}
-    .hero-shade{background:linear-gradient(180deg, rgba(7,5,2,.86) 0%, rgba(7,5,2,.68) 55%, rgba(7,5,2,.6) 100%)}
+    .hero-inner{padding:64px 0 64px}
+    .hero-shade{background:linear-gradient(180deg, rgba(7,5,2,.84) 0%, rgba(7,5,2,.60) 55%, rgba(7,5,2,.55) 100%)}
     .hero-bg{object-position:70% 50%}
     .hero-copy{max-width:100%}
-    .hero-lower{grid-template-columns:1fr;margin-top:-88px;gap:20px}
+    .cd-strip{padding:24px 22px 20px;margin-top:36px}
+    .hero-lower-wrap{padding-top:36px}
     .stats-row{grid-template-columns:1fr 1fr}
     .steps,.two,.split-legend,.invite-rules,.ref-stats,.examples,.lb-stats{grid-template-columns:1fr}
     .wallet-guide ol{grid-template-columns:1fr}
@@ -466,12 +458,15 @@
     .nav-right{gap:10px}
     .nav-right .btn-sm{padding:8px 13px;font-size:13.5px}
     .view-tabs{top:68px}
-    .hero-inner{padding:48px 0 128px}
+    .hero-inner{padding:48px 0 52px}
     .hero h1{font-size:42px}
-    .hero-lower{margin-top:-72px}
+    .cd-strip{padding:20px 16px 16px}
+    .cd-cell .u{letter-spacing:.14em}
+    .cmd-steps li{font-size:15px}
+    .agent-cmd{padding:20px 18px}
     th,td{padding:12px 12px;font-size:13.5px}
     td.num,th.num{font-size:12.5px}
-    .cd-cell .n{font-size:25px}
+    .cd-cell .n{font-size:34px}
     .cal-strip{padding:20px 16px 16px}
     .cal .d .dn{font-size:14px}
     .console-top{padding:20px 20px 0}
@@ -557,12 +552,7 @@
         <b>先说清楚条件：</b>只有获奖才有可分奖金；没有获奖就没有分配。实际金额取决于最终获奖名次与参赛规则，签到本身不产生任何收益，积分也不能兑换、转让或交易。
       </div>
     </div>
-  </div>
-</div>
-
-<div class="wrap hero-lower-wrap" data-view="checkin">
-  <div class="hero-lower">
-    <div class="cd-card reveal">
+    <div class="cd-strip">
       <div class="cd-title">
         <h2>投稿期倒计时</h2>
         <span>截止 12-09 08:00 UTC</span>
@@ -577,8 +567,11 @@
       <div class="cd-progress-row"><span>投稿期进度 · 11-18 开始 — 12-09 截止</span><b id="cd-pct">—</b></div>
       <p class="cd-note">距离投稿期结束（2026-12-09 08:00 UTC，台北时间 12-09 16:00）。结束后签到不再计入积分。</p>
     </div>
+  </div>
+</div>
 
-    <div class="console reveal d1">
+<div class="wrap hero-lower-wrap" data-view="checkin">
+    <div class="console reveal">
       <div class="console-top">
         <h3>Agent 签到</h3>
         <span class="console-chip">BSC · Chain ID 56</span>
@@ -587,20 +580,25 @@
         <p class="sub">签到由你自己的 AI 代理完成：复制下面这段指令发给你的 Agent，它会打开本站、按页面上的 Agent 签到指南完成签到，最后由你在币安 App 里自己确认交易。</p>
         <div class="agent-cmd">
           <p class="agent-cmd-label">发给你的 AGENT</p>
-          <p class="agent-cmd-text" id="agent-cmd-text">打开 https://ztpipixia.github.io/agentcheck-daily/，按页面上的 Agent 签到指南完成一次签到。签到前确认我的地址持有 Agent ID，当天还没签过；邀请人按打开网址时的 ?ref= 来（没有邀请链接就用零地址，无邀请人）；交易由我在钱包里自己确认。若我是首次签到，签到成功后生成我对应的推广链接发给我（本站网址加 ?ref=我的 Agent 钱包地址）；不是首次签到就不用生成。</p>
+          <ol class="cmd-steps" id="agent-cmd-steps">
+            <li><span class="cmd-n">1</span><span>打开 https://ztpipixia.github.io/agentcheck-daily/，按页面上的 Agent 签到指南完成一次签到。</span></li>
+            <li><span class="cmd-n">2</span><span>签到前确认我的地址持有 Agent ID，当天还没签过。</span></li>
+            <li><span class="cmd-n">3</span><span>邀请人按打开网址时的 ?ref= 来（没有邀请链接就用零地址，无邀请人）。</span></li>
+            <li><span class="cmd-n">4</span><span>交易由我在钱包里自己确认。</span></li>
+            <li><span class="cmd-n">5</span><span>若我是首次签到，签到成功后生成我对应的推广链接发给我（本站网址加 ?ref=我的 6 位邀请编号（没有编号就用我的 Agent 钱包地址））；不是首次签到就不用生成。</span></li>
+          </ol>
           <button class="btn btn-gold btn-big" id="btn-copy-cmd" type="button">复制签到指令</button>
         </div>
         <p class="agent-why">为什么走 Agent：Agent 钱包不支持网页直连，签到只能由自己的 AI 代理完成，交易仍由你自己在钱包里确认，本站不代签。完整说明见 <a href="https://ztpipixia.github.io/agentcheck-daily/agent.md" target="_blank" rel="noopener">Agent 签到指南（agent.md）</a>，下方「签到台」也有分步指南。</p>
         <div class="snapshot" aria-label="链上数据快照">
           <span class="snap-nums">
-            <span>全网签到人数 <b>2</b> 人</span>
-            <span>全网总积分 <b>20</b> 分</span>
+            <span>全网签到人数 <b>3</b> 人</span>
+            <span>全网总积分 <b>30</b> 分</span>
           </span>
-          <span class="snap-note">链上快照（2026-11-23 18:26 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 2 个地址完成签到，共 20 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
+          <span class="snap-note">链上快照（2026-11-23 18:57 读取签到合约 <span class="mono">totalCheckers</span> / <span class="mono">totalPoints</span>）：已有 3 个地址完成签到，共 30 分。本页快照每 12 小时更新一次；实时数据以 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan 上的签到合约</a>为准。</span>
         </div>
       </div>
     </div>
-  </div>
 
   <div class="cal-strip reveal">
     <div class="cal-head">
@@ -609,7 +607,7 @@
     </div>
     <div class="cal-wd" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
     <div class="cal" id="cal" aria-label="投稿期签到日历"></div>
-    <p class="cal-legend">金色边框为今天（UTC 日期），已过去的日期会变淡。每天通过自己的 Agent 签到一次，当天 +10 分。</p>
+    <p class="cal-legend">金色高亮为今天（UTC 日期），已过去的日期会变淡。每天通过自己的 Agent 签到一次，当天 +10 分。</p>
   </div>
 </div>
 
@@ -841,23 +839,24 @@
       <span class="sec-num">05</span>
       <div>
         <h2>积分榜</h2>
-        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 18:26 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
+        <p>排行榜数据来自签到合约的链上记录，按累计有效积分排序，积分相同则按首次签到时间先后。签到合约已部署上链，以下为 2026-11-23 18:57 读取的链上快照，本页每 12 小时更新一次；任何人都可以到 <a href="https://bscscan.com/address/0x423D4cce9A6B428f92dD974cC0bF490F24ceD824" target="_blank" rel="noopener">BscScan</a> 核对合约的实时数据。</p>
       </div>
     </div>
     <div class="lb-stats">
-      <div class="stat reveal"><div class="k">全网签到人数（totalCheckers）</div><div class="v"><span class="count" data-count="2">2</span></div></div>
-      <div class="stat reveal d1"><div class="k">全网总积分（totalPoints）</div><div class="v"><span class="count" data-count="20">20</span> 分</div></div>
-      <div class="stat reveal d2"><div class="k">创新奖门槛进度</div><div class="v"><span class="count" data-count="2">2</span> / 30 个地址</div></div>
+      <div class="stat reveal"><div class="k">全网签到人数（totalCheckers）</div><div class="v"><span class="count" data-count="3">3</span></div></div>
+      <div class="stat reveal d1"><div class="k">全网总积分（totalPoints）</div><div class="v"><span class="count" data-count="30">30</span> 分</div></div>
+      <div class="stat reveal d2"><div class="k">创新奖门槛进度</div><div class="v"><span class="count" data-count="3">3</span> / 30 个地址</div></div>
     </div>
     <table id="lb-table" class="reveal">
       <thead><tr><th>排名</th><th>签到者</th><th class="num">签到天数</th><th class="num">积分</th></tr></thead>
       <tbody id="lb-body">
         <tr><td>1</td><td><span class="mono">0xf3cC...6634</span></td><td class="num">1</td><td class="num">10</td></tr>
         <tr><td>2</td><td>第 2 位签到者</td><td class="num">1</td><td class="num">10</td></tr>
+        <tr><td>3</td><td>第 3 位签到者</td><td class="num">—</td><td class="num">—</td></tr>
       </tbody>
     </table>
     <p class="tbl-note">排行榜按钱包地址标识签到者，地址前后各显示几位。</p>
-    <p class="tbl-note">快照说明：截至 2026-11-23 18:26，已有 2 个地址完成签到（各 1 天、10 分），故 totalCheckers = 2、totalPoints = 20。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
+    <p class="tbl-note">快照说明：截至 2026-11-23 18:57，已有 3 个地址完成签到，故 totalCheckers = 3、totalPoints = 30。新签到会持续累积，本页快照每 12 小时更新一次，实时排名以链上记录为准。</p>
   </section>
 
   <section id="contracts" data-view="more">
@@ -963,7 +962,7 @@
     agentIdContract: "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
     checkInContract: "0x423D4cce9A6B428f92dD974cC0bF490F24ceD824",   // 已部署 · BSC 主网
     distributorContract: "0x95A44489A5D0a14dE23E112652412c4535c8c46b", // 已部署 · BSC 主网
-    chainSnapshot: { totalCheckers: 2, totalPoints: 20 }, // 2026-11-23 18:26 链上快照
+    chainSnapshot: { totalCheckers: 3, totalPoints: 30 }, // 2026-11-23 18:57 链上快照
     pointsPerDay: 10,
     periodStartUTC: Date.UTC(2026, 10, 18, 0, 0, 0),
     periodEndUTC: Date.UTC(2026, 11, 9, 8, 0, 0)
@@ -974,17 +973,38 @@
   var REF_CODE_MAP = {
     "859872": "0xf3cC5442d3CC30AC4F7aCE55E81431E3F9396634"
   };
+  /* 公开对照表 ref-codes.json 是登记数据的准源：页面打开后拉取一次，与内置兜底表合并
+     （以 ref-codes.json 为准）；拉不到（离线 / 跨域失败）时用内置表，保证功能不中断。 */
+  var remoteRefMap = null;
+  function mergedRefMap(){
+    var m = {}, k;
+    for (k in REF_CODE_MAP) m[k] = REF_CODE_MAP[k];
+    if (remoteRefMap) for (k in remoteRefMap) m[k] = remoteRefMap[k];
+    return m;
+  }
+  function loadRefCodes(done){
+    if (remoteRefMap !== null || typeof fetch !== "function"){ if (done) done(); return; }
+    fetch(SITE_BASE + "ref-codes.json", { cache: "no-store" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        remoteRefMap = (data && typeof data === "object") ? data : {};
+        if (done) done();
+      })
+      .catch(function(){ remoteRefMap = {}; if (done) done(); });
+  }
+  loadRefCodes();
   function codeForAddress(addr){
     if (!addr) return null;
     var low = String(addr).toLowerCase();
-    for (var code in REF_CODE_MAP){
-      if (REF_CODE_MAP[code].toLowerCase() === low) return code;
+    var map = mergedRefMap();
+    for (var code in map){
+      if (String(map[code]).toLowerCase() === low) return code;
     }
     return null;
   }
   function addressForCode(code){
     if (!code) return null;
-    return REF_CODE_MAP[String(code).trim()] || null;
+    return mergedRefMap()[String(code).trim()] || null;
   }
   function $(id){ return document.getElementById(id); }
   function utcDateStr(ts){
@@ -1076,27 +1096,49 @@
      通过邀请链接打开（?ref= 为 6 位编号或 0x 地址）→ 指令带上链接里的邀请人；
      直接打开、没有 ?ref= → 邀请人用零地址（无邀请人）。不写死任何编号。
      最后固定一句：若用户是首次签到，签到成功后生成其推广链接发给用户；不是首次则不生成。 */
-  function buildAgentCmd(){
+  function refClause(){
     var raw = null;
     try { raw = new URLSearchParams(location.search).get("ref"); } catch (e) {}
-    var head = "打开 " + SITE_BASE + "，按页面上的 Agent 签到指南完成一次签到。签到前确认我的地址持有 Agent ID，当天还没签过；邀请人按打开网址时的 ?ref= 来";
-    var tail = "；交易由我在钱包里自己确认。若我是首次签到，签到成功后生成我对应的推广链接发给我（本站网址加 ?ref=我的 Agent 钱包地址）；不是首次签到就不用生成。";
     var v = raw ? String(raw).trim() : "";
-    if (/^\d{6}$/.test(v)){
-      return head + "（我就是通过邀请链接打开的，邀请编号是 " + v + "，按页面指南查到对应地址后用它作邀请人）" + tail;
-    }
-    if (/^0x[0-9a-fA-F]{40}$/.test(v)){
-      return head + "（我就是通过邀请链接打开的，邀请人地址是 " + v + "）" + tail;
-    }
-    return head + "（没有邀请链接就用零地址，无邀请人）" + tail;
+    if (/^\d{6}$/.test(v)) return "（我就是通过邀请链接打开的，邀请编号是 " + v + "，按页面指南查到对应地址后用它作邀请人）";
+    if (/^0x[0-9a-fA-F]{40}$/.test(v)) return "（我就是通过邀请链接打开的，邀请人地址是 " + v + "）";
+    return "（没有邀请链接就用零地址，无邀请人）";
   }
-  var cmdEl = $("agent-cmd-text");
-  if (cmdEl) cmdEl.textContent = buildAgentCmd();
+  function buildAgentCmd(){
+    var head = "打开 " + SITE_BASE + "，按页面上的 Agent 签到指南完成一次签到。签到前确认我的地址持有 Agent ID，当天还没签过；邀请人按打开网址时的 ?ref= 来";
+    var tail = "；交易由我在钱包里自己确认。若我是首次签到，签到成功后生成我对应的推广链接发给我（本站网址加 ?ref=我的 6 位邀请编号（没有编号就用我的 Agent 钱包地址））；不是首次签到就不用生成。";
+    return head + refClause() + tail;
+  }
+  /* 页面上把指令拆成编号步骤展示；复制时仍复制完整一段原文 */
+  function buildAgentSteps(){
+    return [
+      "打开 " + SITE_BASE + "，按页面上的 Agent 签到指南完成一次签到。",
+      "签到前确认我的地址持有 Agent ID，当天还没签过。",
+      "邀请人按打开网址时的 ?ref= 来" + refClause() + "。",
+      "交易由我在钱包里自己确认。",
+      "若我是首次签到，签到成功后生成我对应的推广链接发给我（本站网址加 ?ref=我的 6 位邀请编号（没有编号就用我的 Agent 钱包地址））；不是首次签到就不用生成。"
+    ];
+  }
+  var agentCmdFull = buildAgentCmd();
+  var stepsEl = $("agent-cmd-steps");
+  if (stepsEl){
+    stepsEl.innerHTML = "";
+    buildAgentSteps().forEach(function(s, i){
+      var li = document.createElement("li");
+      var badge = document.createElement("span");
+      badge.className = "cmd-n";
+      badge.textContent = String(i + 1);
+      var tx = document.createElement("span");
+      tx.textContent = s;
+      li.appendChild(badge);
+      li.appendChild(tx);
+      stepsEl.appendChild(li);
+    });
+  }
 
   /* ============ 复制签到指令 ============ */
   $("btn-copy-cmd").addEventListener("click", function(){
-    var t = $("agent-cmd-text").textContent.replace(/\s+/g, " ").trim();
-    copyText(t, this, "已复制，去发给你的 Agent", "复制签到指令");
+    copyText(agentCmdFull, this, "已复制，去发给你的 Agent", "复制签到指令");
   });
 
   /* ============ 测算器 ============ */
@@ -1157,6 +1199,9 @@
   }
   $("btn-refgen").addEventListener("click", function(){
     var v = $("ref-input").value.trim();
+    loadRefCodes(function(){ generateRef(v); });
+  });
+  function generateRef(v){
     if (!v){
       hideRefOut();
       showRefMsg("请先填入你自己的 Agent 钱包地址。", "warn");
@@ -1178,22 +1223,22 @@
       return;
     }
     if (/^0x[0-9a-fA-F]{40}$/.test(v)){
-      refLink = SITE_BASE + "?ref=" + v;
-      $("ref-link").textContent = refLink;
       var myCode = codeForAddress(v);
+      refLink = SITE_BASE + "?ref=" + (myCode || v);
+      $("ref-link").textContent = refLink;
       if (lbl){
-        if (myCode){ lbl.textContent = "你的已登记编号：" + myCode; lbl.style.display = "inline-flex"; }
+        if (myCode){ lbl.textContent = "邀请编号：" + myCode; lbl.style.display = "inline-flex"; }
         else { lbl.style.display = "none"; lbl.textContent = ""; }
       }
       $("ref-out").classList.add("show");
       showRefMsg(myCode
-        ? "你的邀请链接已生成。对方通过链接打开本站，签到指令会自动带上你作为邀请人；对方完成首次签到后，邀请奖励记在你名下。你也有已登记编号 " + myCode + "，用 ?ref=" + myCode + " 的短链接效果一样。"
+        ? "已按你在 ref-codes.json 里登记的 6 位编号生成邀请链接（编号 " + myCode + "）。对方通过链接打开本站，签到指令会自动带上你作为邀请人；对方完成首次签到后，邀请奖励记在你名下。"
         : "你的邀请链接已生成。对方通过链接打开本站，签到指令会自动带上你作为邀请人；对方完成首次签到后，邀请奖励记在你名下。", "info");
       return;
     }
     hideRefOut();
     showRefMsg("格式不对：请填 0x 开头的 Agent 钱包地址，或已登记的 6 位邀请编号。", "warn");
-  });
+  }
   $("ref-input").addEventListener("keydown", function(e){
     if (e.key === "Enter"){ e.preventDefault(); $("btn-refgen").click(); }
   });

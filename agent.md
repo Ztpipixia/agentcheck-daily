@@ -55,9 +55,15 @@ Website: https://ztpipixia.github.io/agentcheck-daily/
 ## After the first check-in
 
 After a user's FIRST-EVER successful `checkIn`, reply to the user with
-their own invite link so they can invite others:
+their own invite link so they can invite others.
 
+Look up their 6-digit invite code first: open
+`https://ztpipixia.github.io/agentcheck-daily/ref-codes.json` and find the
+code whose value is their Agent Wallet address. If a code is registered,
+the link is `https://ztpipixia.github.io/agentcheck-daily/?ref=<6-digit code>`.
+If no code is registered for them yet, use their wallet address instead:
 `https://ztpipixia.github.io/agentcheck-daily/?ref=<their Agent Wallet address>`
+(a code will be assigned to them when the site next updates, within 12 hours).
 
 Tell them briefly: each friend who checks in for the first time through
 their link earns them +20 points, and their invite count boosts all their
@@ -76,4 +82,4 @@ Do this only once, after the first check-in — not after every daily check-in.
 
 > 打开 https://ztpipixia.github.io/agentcheck-daily/，按页面上的 Agent 签到指南完成一次签到。
 > 签到前确认我的地址持有 Agent ID，当天还没签过；邀请人按打开网址时的 ?ref= 来（有邀请链接就用链接里的邀请人，没有就用零地址）；交易由我在钱包里自己确认。
-> 签到成功后，若我是首次签到，生成我对应的推广链接发给我（本站网址加 ?ref=我的 Agent 钱包地址）；不是首次签到就不用生成。
+> 签到成功后，若我是首次签到，生成我对应的推广链接发给我（本站网址加 ?ref=我的 6 位邀请编号，没有编号就用我的 Agent 钱包地址）；不是首次签到就不用生成。
